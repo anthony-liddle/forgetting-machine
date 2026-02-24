@@ -1,0 +1,159 @@
+import { createElement, clearContainer } from '../ui/dom';
+import { createProgressBar, updateProgressBar, removeProgressBar } from '../ui/progress';
+import {
+  DEFAULT_DECAY_CONFIG,
+  createCharacterThresholds,
+  startDecayLoop,
+  getDecayPhase,
+  DecayPhase,
+} from '../decay/engine';
+import type { DecayConfig } from '../decay/engine';
+import { applyDriftEffect, applyDissolveEffect, applyVanishEffect } from '../decay/effects';
+
+export function wrapTextInSpans(
+  text: string,
+  container: HTMLElement,
+): HTMLSpanElement[] {
+  const allCharSpans: HTMLSpanElement[] = [];
+  const lines = text.split('\n');
+
+  lines.forEach((line, lineIndex) => {
+    if (lineIndex > 0) {
+      container.appendChild(document.createElement('br'));
+    }
+
+    const words = line.split(/( )/);
+
+    words.forEach((word) => {
+      if (word === '') return;
+
+      if (word === ' ') {
+        const span = document.createElement('span');
+        span.className = 'char';
+        span.textContent = ' ';
+        span.dataset.original = ' ';
+        container.appendChild(span);
+        allCharSpans.push(span);
+        return;
+      }
+
+      const wordSpan = createElement('span', 'word');
+
+      for (const char of word) {
+        const span = document.createElement('span');
+        span.className = 'char';
+        span.textContent = char;
+        span.dataset.original = char;
+        wordSpan.appendChild(span);
+        allCharSpans.push(span);
+      }
+
+      container.appendChild(wordSpan);
+    });
+  });
+
+  return allCharSpans;
+}
+
+export function renderBroadcast(
+  container: HTMLElement,
+  secret: string,
+  onComplete: () => void,
+  config: DecayConfig = DEFAULT_DECAY_CONFIG,
+): () => void {
+  const phase = createElement('div', 'phase broadcast');
+  const textContainer = createElement('div', 'broadcast__text');
+
+  // Wrap secret into per-character spans
+  const charSpans = wrapTextInSpans(secret, textContainer);
+
+  // Accessibility: aria-live region with full text
+  const liveRegion = createElement('div', 'sr-only');
+  liveRegion.setAttribute('aria-live', 'polite');
+  liveRegion.textContent = secret;
+
+  // Progress bar
+  const progressBar = createProgressBar();
+
+  phase.appendChild(textContainer);
+  phase.appendChild(liveRegion);
+  container.appendChild(phase);
+  document.body.appendChild(progressBar);
+
+  // Create per-character decay thresholds
+  const thresholds = createCharacterThresholds(charSpans.length, config);
+
+  // Check for reduced motion preference
+  const prefersReducedMotion = window.matchMedia(
+    '(prefers-reduced-motion: reduce)',
+  ).matches;
+
+  // Performance monitoring for mobile degradation
+  let lastFrameTime = performance.now();
+  let slowFrameCount = 0;
+  let degraded = false;
+  const SLOW_FRAME_THRESHOLD = 33;
+  const DEGRADATION_TRIGGER = 10;
+
+  // Start the decay loop
+  const stopLoop = startDecayLoop(
+    config,
+    (progress: number) => {
+      updateProgressBar(progressBar, progress);
+
+      // Performance check
+      const now = performance.now();
+      if (now - lastFrameTime > SLOW_FRAME_THRESHOLD) {
+        slowFrameCount++;
+      }
+      lastFrameTime = now;
+
+      if (slowFrameCount >= DEGRADATION_TRIGGER && !degraded) {
+        degraded = true;
+      }
+
+      if (prefersReducedMotion || degraded) {
+        // Simple fade for reduced motion or degraded performance
+        textContainer.style.opacity = String(Math.max(0, 1 - progress));
+        return;
+      }
+
+      const currentPhase = getDecayPhase(progress);
+
+      charSpans.forEach((span, index) => {
+        const t = thresholds[index];
+
+        if (currentPhase === DecayPhase.Clear) return;
+
+        if (progress >= t.vanishAt) {
+          const vanishIntensity =
+            (progress - t.vanishAt) / (1 - t.vanishAt);
+          applyVanishEffect(span, Math.min(1, vanishIntensity));
+        } else if (progress >= t.dissolveAt) {
+          const dissolveIntensity =
+            (progress - t.dissolveAt) /
+            (t.vanishAt - t.dissolveAt);
+          applyDissolveEffect(span, Math.min(1, dissolveIntensity));
+        } else if (progress >= t.driftAt) {
+          const driftIntensity =
+            (progress - t.driftAt) /
+            (t.dissolveAt - t.driftAt);
+          applyDriftEffect(span, Math.min(1, driftIntensity));
+        }
+      });
+    },
+    () => {
+      // Cleanup: clear all span content before removing
+      charSpans.forEach((span) => {
+        span.textContent = '';
+      });
+      liveRegion.textContent = '';
+      removeProgressBar(progressBar);
+      clearContainer(textContainer);
+      onComplete();
+    },
+  );
+
+  // Return cleanup function
+  return stopLoop;
+}
