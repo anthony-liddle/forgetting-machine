@@ -1,0 +1,203 @@
+:root {
+  /* Color palette */
+  --bg-primary: #0a0a0a;
+  --bg-secondary: #111111;
+  --text-primary: #e8e0d4;
+  --text-secondary: #6b6560;
+  --accent: #c4956a;
+  --noise-dark: #2a2520;
+  --noise-light: #4a4540;
+
+  /* Typography */
+  --font-serif: 'Libre Baskerville', Georgia, 'Times New Roman', serif;
+  --font-sans: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
+    'Helvetica Neue', Arial, sans-serif;
+  --font-size-secret: clamp(1.5rem, 4vw, 2.5rem);
+  --line-height-secret: 1.7;
+
+  /* Layout */
+  --max-width: 640px;
+  --padding: clamp(1.5rem, 5vw, 3rem);
+
+  /* Transitions */
+  --fade-duration: 300ms;
+}
+
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  font-family: var(--font-sans);
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#app {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: var(--padding);
+}
+
+/* Phase container — shared by all phases */
+.phase {
+  width: 100%;
+  max-width: var(--max-width);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  opacity: 1;
+  transition: opacity var(--fade-duration) ease;
+}
+
+.phase.fade-out {
+  opacity: 0;
+}
+
+/* Phase 1: Invitation */
+.invitation__heading {
+  font-family: var(--font-sans);
+  font-size: clamp(1.25rem, 3vw, 1.75rem);
+  font-weight: 400;
+  color: var(--text-primary);
+  margin-bottom: 0.5rem;
+  letter-spacing: -0.01em;
+}
+
+.invitation__subheading {
+  font-family: var(--font-sans);
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  margin-bottom: 2rem;
+  font-style: italic;
+}
+
+.invitation__textarea {
+  width: 100%;
+  min-height: 150px;
+  max-height: 50vh;
+  padding: 1.25rem;
+  font-family: var(--font-serif);
+  font-size: 1.1rem;
+  line-height: 1.6;
+  color: var(--text-primary);
+  background-color: var(--bg-secondary);
+  border: 1px solid var(--noise-dark);
+  border-radius: 4px;
+  resize: none;
+  overflow-y: auto;
+  outline: none;
+  transition: border-color 0.2s ease;
+}
+
+.invitation__textarea:focus {
+  border-color: var(--text-secondary);
+}
+
+.invitation__button {
+  margin-top: 1.5rem;
+  padding: 0.75rem 2rem;
+  font-family: var(--font-sans);
+  font-size: 0.95rem;
+  letter-spacing: 0.02em;
+  color: var(--text-primary);
+  background: transparent;
+  border: 1px solid var(--text-secondary);
+  border-radius: 4px;
+  cursor: pointer;
+  transition: border-color 0.2s ease, color 0.2s ease;
+}
+
+.invitation__button:hover:not(:disabled) {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.invitation__button:disabled {
+  opacity: 0.3;
+  cursor: default;
+}
+
+/* Phase 2: Broadcast */
+.broadcast__text {
+  font-family: var(--font-serif);
+  font-size: var(--font-size-secret);
+  line-height: var(--line-height-secret);
+  color: var(--text-primary);
+  text-align: center;
+  word-break: break-word;
+  max-height: calc(100vh - 120px);
+  overflow-y: auto;
+}
+
+.broadcast__text .char {
+  display: inline-block;
+  transition: none;
+  will-change: transform, opacity, filter, color;
+}
+
+.broadcast__text .word {
+  display: inline-block;
+  white-space: nowrap;
+}
+
+.progress {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  height: 2px;
+  background-color: var(--accent);
+  transition: opacity 0.3s ease;
+}
+
+/* Phase 3: Silence */
+.silence__text {
+  font-family: var(--font-serif);
+  font-size: clamp(1.25rem, 3vw, 2rem);
+  color: var(--text-primary);
+  font-style: italic;
+  opacity: 1;
+  transition: opacity 1s ease;
+}
+
+.silence__text.fade-out {
+  opacity: 0;
+}
+
+/* Accessibility: reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .broadcast__text .char {
+    will-change: opacity;
+  }
+
+  .phase {
+    transition: opacity var(--fade-duration) ease;
+  }
+}
+
+/* Screen reader only utility */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
