@@ -17,6 +17,11 @@ export function renderSilence(
   phase.appendChild(liveRegion);
   container.appendChild(phase);
 
+  // Trigger fade-in on next frame so the transition runs
+  requestAnimationFrame(() => {
+    text.classList.add('fade-in');
+  });
+
   // After ~3 seconds, fade "Gone." and return to invitation
   const fadeTimeout = setTimeout(() => {
     text.classList.add('fade-out');
