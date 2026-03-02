@@ -22,7 +22,7 @@ export function renderInvitation(
   textarea.setAttribute('autocorrect', 'off');
   textarea.setAttribute('autocapitalize', 'off');
   textarea.setAttribute('aria-label', 'Write something you want to let go of');
-  textarea.rows = 6;
+  textarea.rows = 1;
 
   const button = document.createElement('button');
   button.className = 'invitation__button';
@@ -30,10 +30,11 @@ export function renderInvitation(
   button.disabled = true;
   button.type = 'button';
 
-  // Auto-resize textarea
+  // Auto-resize textarea — min-height in CSS sets the initial size;
+  // rows=1 prevents the rows attribute from competing with it.
   textarea.addEventListener('input', () => {
     textarea.style.height = 'auto';
-    textarea.style.height = `${textarea.scrollHeight}px`;
+    textarea.style.height = `${Math.max(textarea.scrollHeight, 150)}px`;
     button.disabled = textarea.value.trim().length === 0;
   });
 
