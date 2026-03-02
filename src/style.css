@@ -119,7 +119,7 @@ body {
   border: 1px solid var(--text-secondary);
   border-radius: 4px;
   cursor: pointer;
-  transition: border-color 0.2s ease, color 0.2s ease;
+  transition: border-color 0.3s ease, color 0.2s ease, opacity 0.3s ease;
 }
 
 .invitation__button:hover:not(:disabled) {
@@ -142,6 +142,12 @@ body {
   word-break: break-word;
   max-height: calc(100vh - 120px);
   overflow: hidden;
+  opacity: 0;
+  transition: opacity 500ms ease;
+}
+
+.broadcast__text.fade-in {
+  opacity: 1;
 }
 
 .broadcast__text .char {

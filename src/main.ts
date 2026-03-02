@@ -6,6 +6,10 @@ import { clearContainer, fadeOut } from './ui/dom';
 
 type Phase = 'invitation' | 'broadcast' | 'silence';
 
+/**
+ * Bootstrap the app: set up the phase state machine and render the
+ * initial invitation phase inside the #app container.
+ */
 function init(): void {
   const root = document.getElementById('app');
   if (!root) return;

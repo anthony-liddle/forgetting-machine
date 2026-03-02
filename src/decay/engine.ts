@@ -33,6 +33,7 @@ export interface CharacterThreshold {
   vanishAt: number;
 }
 
+/** Map a progress value (0–1) to its corresponding decay phase. */
 export function getDecayPhase(progress: number): DecayPhase {
   if (progress < 0.33) return DecayPhase.Clear;
   if (progress < 0.67) return DecayPhase.Drift;
@@ -40,10 +41,16 @@ export function getDecayPhase(progress: number): DecayPhase {
   return DecayPhase.Vanish;
 }
 
+/** Return a random float between min (inclusive) and max (exclusive). */
 function randomInRange(min: number, max: number): number {
   return min + Math.random() * (max - min);
 }
 
+/**
+ * Generate per-character decay schedules with randomised thresholds.
+ * Each character gets its own drift/dissolve/vanish start point within
+ * the configured phase windows, creating a staggered decay effect.
+ */
 export function createCharacterThresholds(
   count: number,
   config: DecayConfig,
@@ -61,6 +68,12 @@ export function createCharacterThresholds(
 
 export type DecayTickCallback = (progress: number) => void;
 
+/**
+ * Start a requestAnimationFrame loop that drives the decay animation.
+ * Calls `onTick` with the current progress (0–1) each frame, then
+ * calls `onComplete` when the total duration has elapsed.
+ * Returns a stop function to cancel the loop early.
+ */
 export function startDecayLoop(
   config: DecayConfig,
   onTick: DecayTickCallback,

@@ -2,6 +2,11 @@ import { createElement } from '../ui/dom';
 
 const MAX_SECRET_LENGTH = 5000;
 
+/**
+ * Render the invitation phase: a textarea for writing a secret and a
+ * "Let go" button to submit it. Enter submits; Shift+Enter adds a newline.
+ * Calls `onLetGo` with the trimmed text when the user submits.
+ */
 export function renderInvitation(
   container: HTMLElement,
   onLetGo: (secret: string) => void,
@@ -46,9 +51,9 @@ export function renderInvitation(
     }
   });
 
-  // Cmd/Ctrl+Enter keyboard shortcut
+  // Enter submits (Shift+Enter for newlines)
   textarea.addEventListener('keydown', (e: KeyboardEvent) => {
-    if (e.key === 'Enter' && (e.metaKey || e.ctrlKey)) {
+    if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();
       if (!button.disabled) {
         button.click();
@@ -68,6 +73,7 @@ export function renderInvitation(
   }
 }
 
+/** Detect mobile devices via user-agent to avoid auto-focusing the textarea. */
 function isMobile(): boolean {
   return /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
 }
