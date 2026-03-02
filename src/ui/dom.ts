@@ -1,3 +1,4 @@
+/** Create a DOM element with an optional CSS class and text content. */
 export function createElement(
   tag: string,
   className?: string,
@@ -9,12 +10,18 @@ export function createElement(
   return el;
 }
 
+/** Remove all child nodes from a container element. */
 export function clearContainer(container: HTMLElement): void {
   while (container.firstChild) {
     container.removeChild(container.firstChild);
   }
 }
 
+/**
+ * Animate an element to opacity 0 via the `.fade-out` CSS class.
+ * Resolves when the CSS transition ends, with a 400ms fallback timeout
+ * in case the `transitionend` event never fires.
+ */
 export function fadeOut(element: HTMLElement): Promise<void> {
   return new Promise((resolve) => {
     element.classList.add('fade-out');
@@ -24,6 +31,7 @@ export function fadeOut(element: HTMLElement): Promise<void> {
   });
 }
 
+/** Restore an element's opacity by removing the `.fade-out` class. */
 export function fadeIn(element: HTMLElement): void {
   element.classList.remove('fade-out');
 }

@@ -10,6 +10,11 @@ import {
 import type { DecayConfig } from '../decay/engine';
 import { applyDriftEffect, applyDissolveEffect, applyVanishEffect } from '../decay/effects';
 
+/**
+ * Convert a string into per-character `<span>` elements inside the container.
+ * Preserves line breaks as `<br>` and wraps each word in a `.word` span
+ * so the browser can break lines between words, not mid-word.
+ */
 export function wrapTextInSpans(
   text: string,
   container: HTMLElement,
@@ -55,6 +60,14 @@ export function wrapTextInSpans(
   return allCharSpans;
 }
 
+/**
+ * Render the broadcast phase: display the secret text with a per-character
+ * staggered decay animation over the configured duration.
+ * The text fades in over 500ms, then each character independently drifts,
+ * dissolves, and vanishes. A progress bar tracks elapsed time.
+ * Calls `onComplete` when the animation finishes.
+ * Returns a cleanup function to stop the decay loop early.
+ */
 export function renderBroadcast(
   container: HTMLElement,
   secret: string,
@@ -79,6 +92,13 @@ export function renderBroadcast(
   phase.appendChild(liveRegion);
   container.appendChild(phase);
   document.body.appendChild(progressBar);
+
+  // Fade in the broadcast text over 500ms
+  requestAnimationFrame(() => {
+    requestAnimationFrame(() => {
+      textContainer.classList.add('fade-in');
+    });
+  });
 
   // Create per-character decay thresholds
   const thresholds = createCharacterThresholds(charSpans.length, config);
