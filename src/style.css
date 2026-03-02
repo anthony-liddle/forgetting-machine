@@ -141,13 +141,13 @@ body {
   text-align: center;
   word-break: break-word;
   max-height: calc(100vh - 120px);
-  overflow-y: auto;
+  overflow: hidden;
 }
 
 .broadcast__text .char {
   display: inline-block;
   transition: none;
-  will-change: transform, opacity, filter, color;
+  will-change: opacity, color;
 }
 
 .broadcast__text .word {
