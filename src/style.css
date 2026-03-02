@@ -141,13 +141,14 @@ body {
   text-align: center;
   word-break: break-word;
   max-height: calc(100vh - 120px);
-  overflow-y: auto;
+  overflow: hidden;
 }
 
 .broadcast__text .char {
   display: inline-block;
   transition: none;
-  will-change: transform, opacity, filter, color;
+  white-space: pre;
+  will-change: opacity, color;
 }
 
 .broadcast__text .word {
@@ -170,8 +171,12 @@ body {
   font-size: clamp(1.25rem, 3vw, 2rem);
   color: var(--text-primary);
   font-style: italic;
+  opacity: 0;
+  transition: opacity 1.5s ease;
+}
+
+.silence__text.fade-in {
   opacity: 1;
-  transition: opacity 1s ease;
 }
 
 .silence__text.fade-out {
