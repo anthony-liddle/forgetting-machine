@@ -147,6 +147,7 @@ body {
 .broadcast__text .char {
   display: inline-block;
   transition: none;
+  white-space: pre;
   will-change: opacity, color;
 }
 
@@ -170,8 +171,12 @@ body {
   font-size: clamp(1.25rem, 3vw, 2rem);
   color: var(--text-primary);
   font-style: italic;
+  opacity: 0;
+  transition: opacity 1.5s ease;
+}
+
+.silence__text.fade-in {
   opacity: 1;
-  transition: opacity 1s ease;
 }
 
 .silence__text.fade-out {
