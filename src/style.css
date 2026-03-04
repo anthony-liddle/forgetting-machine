@@ -86,6 +86,34 @@ body {
   font-style: italic;
 }
 
+/* Splash intro: large centered heading state */
+.invitation__heading--splash {
+  font-size: clamp(2.5rem, 8vw, 5rem);
+  letter-spacing: -0.02em;
+  transition: font-size 800ms ease, letter-spacing 800ms ease;
+}
+
+/* Settled heading state (normal invitation size) */
+.invitation__heading--settled {
+  font-size: clamp(1.25rem, 3vw, 1.75rem);
+  letter-spacing: -0.01em;
+  transition: font-size 800ms ease, letter-spacing 800ms ease;
+}
+
+/* Form wrapper: fades in after heading settles */
+.invitation__form {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  opacity: 0;
+  transition: opacity 600ms ease;
+}
+
+.invitation__form.fade-in {
+  opacity: 1;
+}
+
 .invitation__textarea {
   width: 100%;
   min-height: 150px;
@@ -143,7 +171,7 @@ body {
   max-height: calc(100vh - 120px);
   overflow: hidden;
   opacity: 0;
-  transition: opacity 500ms ease;
+  transition: opacity 1000ms ease;
 }
 
 .broadcast__text.fade-in {
@@ -178,7 +206,7 @@ body {
   color: var(--text-primary);
   font-style: italic;
   opacity: 0;
-  transition: opacity 1.5s ease;
+  transition: opacity 3s ease;
 }
 
 .silence__text.fade-in {
