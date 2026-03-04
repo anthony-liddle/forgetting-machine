@@ -177,7 +177,7 @@ body {
   max-height: calc(100vh - 120px);
   overflow: hidden;
   opacity: 0;
-  transition: opacity 1000ms ease;
+  transition: opacity var(--broadcast-fade-in, 1000ms) ease;
 }
 
 .broadcast__text.fade-in {
