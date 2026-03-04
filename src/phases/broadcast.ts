@@ -9,6 +9,7 @@ import {
 } from '../decay/engine';
 import type { DecayConfig } from '../decay/engine';
 import { applyDriftEffect, applyDissolveEffect, applyVanishEffect } from '../decay/effects';
+import { TIMING } from '../timing';
 
 /**
  * Convert a string into per-character `<span>` elements inside the container.
@@ -93,7 +94,8 @@ export function renderBroadcast(
   container.appendChild(phase);
   document.body.appendChild(progressBar);
 
-  // Fade in the broadcast text over 500ms
+  // Fade in the broadcast text (duration: TIMING.BROADCAST_FADE_IN, controlled by CSS)
+  textContainer.style.setProperty('--broadcast-fade-in', `${TIMING.BROADCAST_FADE_IN}ms`);
   requestAnimationFrame(() => {
     requestAnimationFrame(() => {
       textContainer.classList.add('fade-in');
