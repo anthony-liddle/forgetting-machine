@@ -22,6 +22,7 @@ export function renderInvitation(
   // Build form wrapper — present in DOM immediately (opacity: 0 via CSS)
   // so querySelector works synchronously in tests and the layout is stable.
   const form = createElement('div', 'invitation__form');
+  form.setAttribute('aria-hidden', 'true');
 
   const subheading = createElement(
     'p',
@@ -95,6 +96,7 @@ export function renderInvitation(
     // Step 3: After a brief delay, fade in the form
     setTimeout(() => {
       form.classList.add('fade-in');
+      form.removeAttribute('aria-hidden');
 
       // Auto-focus on desktop after form is visible
       setTimeout(() => {
