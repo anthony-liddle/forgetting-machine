@@ -50,12 +50,13 @@ export function renderSilence(
     });
   });
 
-  // Early interaction during the initial hold
+  // Early interaction during the initial hold — uses a fast fade so skipping
+  // feels responsive rather than making the user wait for the slow fade-out.
   const earlyInteraction = () => {
     if (hasReset) return;
     cleanup();
     text.classList.add('fade-out');
-    setTimeout(onReset, TIMING.SILENCE_FADE_OUT);
+    setTimeout(onReset, TIMING.SILENCE_SKIP_FADE_OUT);
   };
 
   // Early interaction after the fade-out begins

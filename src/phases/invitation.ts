@@ -80,19 +80,23 @@ export function renderInvitation(
   phase.appendChild(form);
   container.appendChild(phase);
 
+  // Start heading invisible; fade-in is triggered after SPLASH_FADE_IN_HOLD.
+  heading.style.opacity = '0';
+  heading.style.transition = `opacity ${TIMING.SPLASH_FADE_IN}ms ease`;
+
   // Step 1: Measure the invisible form's height to calculate how far down
   // to offset the heading so it appears vertically centered in the viewport.
-  // (If the phase div is H tall and #app centers it, the heading sits at the
-  // top of the phase div. translateY(formHeight / 2) pushes it to the visual
-  // center. In jsdom formHeight is 0, so tests are unaffected.)
+  // translateY(formHeight / 2) compensates for the form below the heading in
+  // the flex column, pushing the heading to the visual center of #app.
+  // In jsdom formHeight is 0, so the offset is a no-op and tests are unaffected.
   requestAnimationFrame(() => {
     const formHeight = form.getBoundingClientRect().height;
     heading.style.transform = `translateY(${formHeight / 2}px)`;
 
-    // Step 2: One more frame so the transform is painted before fade-in starts.
-    requestAnimationFrame(() => {
-      heading.classList.add('fade-in');
-    });
+    // Step 2: After the hold, fade the heading in.
+    setTimeout(() => {
+      heading.style.opacity = '1';
+    }, TIMING.SPLASH_FADE_IN_HOLD);
   });
 
   // Step 3: After SPLASH_HOLD, animate heading up and shrink simultaneously,
