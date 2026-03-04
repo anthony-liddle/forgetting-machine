@@ -23,6 +23,7 @@ export function renderSilence(
   phase.appendChild(text);
   phase.appendChild(liveRegion);
   container.appendChild(phase);
+  text.style.setProperty('--silence-fade-in', `${TIMING.SILENCE_FADE_IN_CSS}ms`);
 
   let hasReset = false;
 

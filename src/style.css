@@ -212,7 +212,7 @@ body {
   color: var(--text-primary);
   font-style: italic;
   opacity: 0;
-  transition: opacity 3s ease;
+  transition: opacity var(--silence-fade-in, 3s) ease;
 }
 
 .silence__text.fade-in {

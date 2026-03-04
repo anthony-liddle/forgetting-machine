@@ -64,7 +64,7 @@ export function wrapTextInSpans(
 /**
  * Render the broadcast phase: display the secret text with a per-character
  * staggered decay animation over the configured duration.
- * The text fades in over 500ms, then each character independently drifts,
+ * The text fades in over 1000ms, then each character independently drifts,
  * dissolves, and vanishes. A progress bar tracks elapsed time.
  * Calls `onComplete` when the animation finishes.
  * Returns a cleanup function to stop the decay loop early.
