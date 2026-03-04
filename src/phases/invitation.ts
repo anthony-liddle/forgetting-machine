@@ -80,25 +80,40 @@ export function renderInvitation(
   phase.appendChild(form);
   container.appendChild(phase);
 
-  // Step 1: Fade in the large heading
+  // Step 1: Measure the invisible form's height to calculate how far down
+  // to offset the heading so it appears vertically centered in the viewport.
+  // (If the phase div is H tall and #app centers it, the heading sits at the
+  // top of the phase div. translateY(formHeight / 2) pushes it to the visual
+  // center. In jsdom formHeight is 0, so tests are unaffected.)
   requestAnimationFrame(() => {
+    const formHeight = form.getBoundingClientRect().height;
+    heading.style.transform = `translateY(${formHeight / 2}px)`;
+
+    // Step 2: One more frame so the transform is painted before fade-in starts.
     requestAnimationFrame(() => {
       heading.classList.add('fade-in');
     });
   });
 
-  // Step 2: After SPLASH_HOLD, settle heading and reveal form
+  // Step 3: After SPLASH_HOLD, animate heading up and shrink simultaneously,
+  // then fade the form in below it.
   setTimeout(() => {
-    // Swap splash class for settled class — CSS transitions handle font-size
+    // Apply transition inline so it fires for the coming property changes.
+    // Done here (not in CSS) so the initial translateY snap is instant.
+    const t = `${TIMING.SPLASH_HEADING_TRANSITION}ms ease`;
+    heading.style.transition = `transform ${t}, font-size ${t}, letter-spacing ${t}`;
+
+    // Animate heading to its natural position and settled font size.
+    heading.style.transform = 'translateY(0)';
     heading.classList.remove('invitation__heading--splash');
     heading.classList.add('invitation__heading--settled');
 
-    // Step 3: After a brief delay, fade in the form
+    // Step 4: After a brief delay, fade the form in.
     setTimeout(() => {
       form.classList.add('fade-in');
       form.removeAttribute('aria-hidden');
 
-      // Auto-focus on desktop after form is visible
+      // Auto-focus on desktop after form finishes fading in.
       setTimeout(() => {
         if (!isMobile()) {
           textarea.focus();

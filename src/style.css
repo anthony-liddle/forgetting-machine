@@ -62,7 +62,6 @@ body {
   align-items: center;
   opacity: 1;
   transition: opacity var(--fade-duration) ease;
-  position: relative;
 }
 
 .phase.fade-out {
@@ -87,25 +86,27 @@ body {
   font-style: italic;
 }
 
-/* Splash intro: large centered heading state */
+/* Splash intro: large centered heading state.
+   Transition is applied inline by JS at settle-time so the initial
+   transform offset is set instantly without animating. */
 .invitation__heading--splash {
-  font-size: clamp(2.5rem, 8vw, 5rem);
+  font-size: clamp(1.5rem, 4.5vw, 2.5rem);
   letter-spacing: -0.02em;
-  transition: font-size 800ms ease, letter-spacing 800ms ease;
+  white-space: nowrap;
 }
 
 /* Settled heading state (normal invitation size) */
 .invitation__heading--settled {
   font-size: clamp(1.25rem, 3vw, 1.75rem);
   letter-spacing: -0.01em;
-  transition: font-size 800ms ease, letter-spacing 800ms ease;
+  white-space: normal;
 }
 
-/* Form wrapper: fades in after heading settles */
+/* Form wrapper: in normal flow from the start (opacity 0).
+   The heading uses transform: translateY to visually compensate
+   for the form's height, creating the centered-splash illusion. */
 .invitation__form {
-  position: absolute;
-  left: 0;
-  right: 0;
+  width: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -115,7 +116,6 @@ body {
 }
 
 .invitation__form.fade-in {
-  position: static;
   opacity: 1;
   pointer-events: auto;
 }
