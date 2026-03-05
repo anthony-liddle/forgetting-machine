@@ -1,8 +1,8 @@
 import './style.css';
-import { renderInvitation } from './phases/invitation';
-import { renderBroadcast } from './phases/broadcast';
-import { renderSilence } from './phases/silence';
-import { clearContainer, fadeOut } from './ui/dom';
+import { renderInvitation } from '@/phases/invitation';
+import { renderBroadcast } from '@/phases/broadcast';
+import { renderSilence } from '@/phases/silence';
+import { clearContainer, fadeOut } from '@/ui/dom';
 
 type Phase = 'invitation' | 'broadcast' | 'silence';
 

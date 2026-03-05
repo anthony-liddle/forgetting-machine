@@ -1,5 +1,5 @@
-import { createElement } from '../ui/dom';
-import { TIMING } from '../timing';
+import { createElement } from '@/ui/dom';
+import { TIMING } from '@/timing';
 
 const MAX_SECRET_LENGTH = 5000;
 

@@ -1,15 +1,15 @@
-import { createElement, clearContainer } from '../ui/dom';
-import { createProgressBar, updateProgressBar, removeProgressBar } from '../ui/progress';
+import { createElement, clearContainer } from '@/ui/dom';
+import { createProgressBar, updateProgressBar, removeProgressBar } from '@/ui/progress';
 import {
   DEFAULT_DECAY_CONFIG,
   createCharacterThresholds,
   startDecayLoop,
   getDecayPhase,
   DecayPhase,
-} from '../decay/engine';
-import type { DecayConfig } from '../decay/engine';
-import { applyDriftEffect, applyDissolveEffect, applyVanishEffect } from '../decay/effects';
-import { TIMING } from '../timing';
+} from '@/decay/engine';
+import type { DecayConfig } from '@/decay/engine';
+import { applyDriftEffect, applyDissolveEffect, applyVanishEffect } from '@/decay/effects';
+import { TIMING } from '@/timing';
 
 /**
  * Convert a string into per-character `<span>` elements inside the container.

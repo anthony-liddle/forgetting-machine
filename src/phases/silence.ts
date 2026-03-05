@@ -1,5 +1,5 @@
-import { createElement } from '../ui/dom';
-import { TIMING } from '../timing';
+import { createElement } from '@/ui/dom';
+import { TIMING } from '@/timing';
 
 /**
  * Render the silence phase: display "Gone." with a fade-in, hold for
