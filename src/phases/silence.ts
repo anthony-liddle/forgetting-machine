@@ -1,8 +1,9 @@
-import { createElement } from '../ui/dom';
+import { createElement } from '@/ui/dom';
+import { TIMING } from '@/timing';
 
 /**
  * Render the silence phase: display "Gone." with a fade-in, hold for
- * 3 seconds, then fade out and call `onReset` to return to invitation.
+ * SILENCE_HOLD ms, then fade out and call `onReset` to return to invitation.
  * The user can click or press any key to skip ahead at any point
  * (after a 500ms debounce to avoid accidental triggers).
  */
@@ -22,6 +23,7 @@ export function renderSilence(
   phase.appendChild(text);
   phase.appendChild(liveRegion);
   container.appendChild(phase);
+  text.style.setProperty('--silence-fade-in', `${TIMING.SILENCE_FADE_IN_CSS}ms`);
 
   let hasReset = false;
 
@@ -48,20 +50,21 @@ export function renderSilence(
     });
   });
 
-  // Early interaction during the initial 3s hold
+  // Early interaction during the initial hold — uses a fast fade so skipping
+  // feels responsive rather than making the user wait for the slow fade-out.
   const earlyInteraction = () => {
     if (hasReset) return;
     cleanup();
     text.classList.add('fade-out');
-    setTimeout(onReset, 500);
+    setTimeout(onReset, TIMING.SILENCE_SKIP_FADE_OUT);
   };
 
-  // Early interaction after the 3s fade-out begins
+  // Early interaction after the fade-out begins
   const earlyReset = () => {
     doReset();
   };
 
-  // After ~3 seconds, fade "Gone." and return to invitation
+  // After hold duration, fade "Gone." and return to invitation
   const fadeTimeout = setTimeout(() => {
     if (hasReset) return;
     text.classList.add('fade-out');
@@ -69,10 +72,10 @@ export function renderSilence(
     document.addEventListener('keydown', earlyReset, { once: true });
     document.addEventListener('click', earlyReset, { once: true });
 
-    setTimeout(doReset, 1000);
-  }, 3000);
+    setTimeout(doReset, TIMING.SILENCE_FADE_OUT);
+  }, TIMING.SILENCE_HOLD);
 
-  // Allow any keypress/click during the initial 3s hold
+  // Allow any keypress/click during the initial hold
   // Only listen after a brief delay to prevent accidental triggers
   setTimeout(() => {
     if (hasReset) return;

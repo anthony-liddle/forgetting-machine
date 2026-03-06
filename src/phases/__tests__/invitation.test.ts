@@ -77,4 +77,18 @@ describe('renderInvitation', () => {
 
     expect(onLetGo).toHaveBeenCalledWith('a'.repeat(5000));
   });
+
+  it('renders heading with splash class initially', () => {
+    const heading = container.querySelector('.invitation__heading');
+    expect(heading!.classList.contains('invitation__heading--splash')).toBe(true);
+    expect(heading!.classList.contains('invitation__heading--settled')).toBe(false);
+  });
+
+  it('wraps subheading, textarea, and button in .invitation__form', () => {
+    const form = container.querySelector('.invitation__form');
+    expect(form).not.toBeNull();
+    expect(form!.querySelector('.invitation__subheading')).not.toBeNull();
+    expect(form!.querySelector('textarea')).not.toBeNull();
+    expect(form!.querySelector('.invitation__button')).not.toBeNull();
+  });
 });
