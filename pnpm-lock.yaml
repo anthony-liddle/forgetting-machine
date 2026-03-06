@@ -7,6 +7,10 @@ settings:
 importers:
 
   .:
+    dependencies:
+      soundscape-engine:
+        specifier: ^0.1.1
+        version: 0.1.1
     devDependencies:
       '@commitlint/cli':
         specifier: ^20.4.3
@@ -1305,6 +1309,9 @@ packages:
   slice-ansi@8.0.0:
     resolution: {integrity: sha512-stxByr12oeeOyY2BlviTNQlYV5xOj47GirPr4yA1hE9JCtxfQN0+tVbkxwCtYDQWhEKWFHsEK48ORg5jrouCAg==}
     engines: {node: '>=20'}
+
+  soundscape-engine@0.1.1:
+    resolution: {integrity: sha512-LnOcpDwKN4IZKpo+kCjmB8z6WHGvIVs3D1L41SSMX6QsL/s+K2iuAfnTxTrhlYbYnj15uf+akFGXWNMWSj1Grw==}
 
   source-map-js@1.2.1:
     resolution: {integrity: sha512-UXWMKhLOwVKb728IUtQPXxfYU+usdybtUrK/8uGE8CQMvrhOpwvzDBwj0QhSL7MQc7vIsISBG8VQ8+IDQxpfQA==}
@@ -2734,6 +2741,8 @@ snapshots:
     dependencies:
       ansi-styles: 6.2.3
       is-fullwidth-code-point: 5.1.0
+
+  soundscape-engine@0.1.1: {}
 
   source-map-js@1.2.1: {}
 

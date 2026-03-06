@@ -3,6 +3,7 @@ import { renderInvitation } from '@/phases/invitation';
 import { renderBroadcast } from '@/phases/broadcast';
 import { renderSilence } from '@/phases/silence';
 import { clearContainer, fadeOut } from '@/ui/dom';
+import { musicManager } from '@/audio/musicManager';
 
 type Phase = 'invitation' | 'broadcast' | 'silence';
 
@@ -29,6 +30,7 @@ function init(): void {
 
         case 'broadcast': {
           if (!secret) return;
+          musicManager.initialize().then(() => musicManager.start());
           renderBroadcast(root, secret, () => {
             transitionTo('silence');
           });
@@ -36,6 +38,7 @@ function init(): void {
         }
 
         case 'silence':
+          musicManager.stop();
           renderSilence(root, () => {
             transitionTo('invitation');
           });
