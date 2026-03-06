@@ -4,15 +4,15 @@
  */
 export const TIMING = {
   // Phase transitions
-  PHASE_FADE_OUT: 300,       // .phase fade-out (matches --fade-duration CSS var)
+  PHASE_FADE_OUT: 500,       // .phase fade-out (matches --fade-duration CSS var)
 
   // Invitation / splash
-  SPLASH_FADE_IN_HOLD: 300,  // Hold at opacity 0 before the title starts fading in
-  SPLASH_FADE_IN: 800,       // Title opacity fade-in duration (controlled inline in JS)
-  SPLASH_HOLD: 1200,         // How long after render before the settle animation begins
-  SPLASH_HEADING_TRANSITION: 800, // Heading shrink + slide duration (controlled inline in JS)
-  SPLASH_FORM_DELAY: 200,    // Delay after heading starts settling before form fades in
-  SPLASH_FORM_FADE_IN: 600,  // Form opacity transition duration (also set in CSS)
+  SPLASH_FADE_IN_HOLD: 500,  // Hold at opacity 0 before the title starts fading in
+  SPLASH_FADE_IN: 2200,       // Title opacity fade-in duration (controlled inline in JS)
+  SPLASH_HOLD: 2200,         // How long after render before the settle animation begins
+  SPLASH_HEADING_TRANSITION: 1800, // Heading shrink + slide duration (controlled inline in JS)
+  SPLASH_FORM_DELAY: 1500,    // Delay after heading starts settling before form fades in
+  SPLASH_FORM_FADE_IN: 900,  // Form opacity transition duration (also set in CSS)
 
   // Broadcast
   BROADCAST_FADE_IN: 1000,   // Secret text opacity fade-in (also set in CSS)

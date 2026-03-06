@@ -135,7 +135,7 @@ body {
   resize: none;
   overflow-y: auto;
   outline: none;
-  transition: border-color 0.2s ease;
+  transition: border-color 0.5s ease;
 }
 
 .invitation__textarea:focus {
