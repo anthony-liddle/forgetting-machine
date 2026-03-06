@@ -1,10 +1,14 @@
-import { createElement } from '../ui/dom';
+import { createElement } from '@/ui/dom';
+import { TIMING } from '@/timing';
 
 const MAX_SECRET_LENGTH = 5000;
 
 /**
- * Render the invitation phase: a textarea for writing a secret and a
- * "Let go" button to submit it. Enter submits; Shift+Enter adds a newline.
+ * Render the invitation phase with a splash intro animation:
+ * 1. "The Forgetting Machine" fades in large and centered.
+ * 2. After SPLASH_HOLD ms, the heading shrinks to its settled size.
+ * 3. The form (subheading, textarea, button) fades in below it.
+ *
  * Calls `onLetGo` with the trimmed text when the user submits.
  */
 export function renderInvitation(
@@ -13,7 +17,13 @@ export function renderInvitation(
 ): void {
   const phase = createElement('div', 'phase invitation');
 
-  const heading = createElement('h1', 'invitation__heading', 'The Forgetting Machine');
+  const heading = createElement('h1', 'invitation__heading invitation__heading--splash', 'The Forgetting Machine');
+
+  // Build form wrapper — present in DOM immediately (opacity: 0 via CSS)
+  // so querySelector works synchronously in tests and the layout is stable.
+  const form = createElement('div', 'invitation__form');
+  form.setAttribute('aria-hidden', 'true');
+
   const subheading = createElement(
     'p',
     'invitation__subheading',
@@ -35,8 +45,7 @@ export function renderInvitation(
   button.disabled = true;
   button.type = 'button';
 
-  // Auto-resize textarea — min-height in CSS sets the initial size;
-  // rows=1 prevents the rows attribute from competing with it.
+  // Auto-resize textarea
   textarea.addEventListener('input', () => {
     textarea.style.height = 'auto';
     textarea.style.height = `${Math.max(textarea.scrollHeight, 150)}px`;
@@ -61,16 +70,61 @@ export function renderInvitation(
     }
   });
 
+  form.appendChild(subheading);
+  form.appendChild(textarea);
+  form.appendChild(button);
+
+  // Both heading and form are in the DOM immediately.
+  // The form starts invisible (opacity: 0 via .invitation__form CSS).
   phase.appendChild(heading);
-  phase.appendChild(subheading);
-  phase.appendChild(textarea);
-  phase.appendChild(button);
+  phase.appendChild(form);
   container.appendChild(phase);
 
-  // Auto-focus on desktop only
-  if (!isMobile()) {
-    textarea.focus();
-  }
+  // Start heading invisible; fade-in is triggered after SPLASH_FADE_IN_HOLD.
+  heading.style.opacity = '0';
+  heading.style.transition = `opacity ${TIMING.SPLASH_FADE_IN}ms ease`;
+
+  // Step 1: Measure the invisible form's height to calculate how far down
+  // to offset the heading so it appears vertically centered in the viewport.
+  // translateY(formHeight / 2) compensates for the form below the heading in
+  // the flex column, pushing the heading to the visual center of #app.
+  // In jsdom formHeight is 0, so the offset is a no-op and tests are unaffected.
+  requestAnimationFrame(() => {
+    const formHeight = form.getBoundingClientRect().height;
+    heading.style.transform = `translateY(${formHeight / 2}px)`;
+
+    // Step 2: After the hold, fade the heading in.
+    setTimeout(() => {
+      heading.style.opacity = '1';
+    }, TIMING.SPLASH_FADE_IN_HOLD);
+  });
+
+  // Step 3: After SPLASH_HOLD, animate heading up and shrink simultaneously,
+  // then fade the form in below it.
+  setTimeout(() => {
+    // Apply transition inline so it fires for the coming property changes.
+    // Done here (not in CSS) so the initial translateY snap is instant.
+    const t = `${TIMING.SPLASH_HEADING_TRANSITION}ms ease`;
+    heading.style.transition = `transform ${t}, font-size ${t}, letter-spacing ${t}`;
+
+    // Animate heading to its natural position and settled font size.
+    heading.style.transform = 'translateY(0)';
+    heading.classList.remove('invitation__heading--splash');
+    heading.classList.add('invitation__heading--settled');
+
+    // Step 4: After a brief delay, fade the form in.
+    setTimeout(() => {
+      form.classList.add('fade-in');
+      form.removeAttribute('aria-hidden');
+
+      // Auto-focus on desktop after form finishes fading in.
+      setTimeout(() => {
+        if (!isMobile()) {
+          textarea.focus();
+        }
+      }, TIMING.SPLASH_FORM_FADE_IN);
+    }, TIMING.SPLASH_FORM_DELAY);
+  }, TIMING.SPLASH_HOLD);
 }
 
 /** Detect mobile devices via user-agent to avoid auto-focusing the textarea. */

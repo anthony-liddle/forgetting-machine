@@ -1,14 +1,15 @@
-import { createElement, clearContainer } from '../ui/dom';
-import { createProgressBar, updateProgressBar, removeProgressBar } from '../ui/progress';
+import { createElement, clearContainer } from '@/ui/dom';
+import { createProgressBar, updateProgressBar, removeProgressBar } from '@/ui/progress';
 import {
   DEFAULT_DECAY_CONFIG,
   createCharacterThresholds,
   startDecayLoop,
   getDecayPhase,
   DecayPhase,
-} from '../decay/engine';
-import type { DecayConfig } from '../decay/engine';
-import { applyDriftEffect, applyDissolveEffect, applyVanishEffect } from '../decay/effects';
+} from '@/decay/engine';
+import type { DecayConfig } from '@/decay/engine';
+import { applyDriftEffect, applyDissolveEffect, applyVanishEffect } from '@/decay/effects';
+import { TIMING } from '@/timing';
 
 /**
  * Convert a string into per-character `<span>` elements inside the container.
@@ -63,7 +64,7 @@ export function wrapTextInSpans(
 /**
  * Render the broadcast phase: display the secret text with a per-character
  * staggered decay animation over the configured duration.
- * The text fades in over 500ms, then each character independently drifts,
+ * The text fades in over 1000ms, then each character independently drifts,
  * dissolves, and vanishes. A progress bar tracks elapsed time.
  * Calls `onComplete` when the animation finishes.
  * Returns a cleanup function to stop the decay loop early.
@@ -93,7 +94,8 @@ export function renderBroadcast(
   container.appendChild(phase);
   document.body.appendChild(progressBar);
 
-  // Fade in the broadcast text over 500ms
+  // Fade in the broadcast text (duration: TIMING.BROADCAST_FADE_IN, controlled by CSS)
+  textContainer.style.setProperty('--broadcast-fade-in', `${TIMING.BROADCAST_FADE_IN}ms`);
   requestAnimationFrame(() => {
     requestAnimationFrame(() => {
       textContainer.classList.add('fade-in');
