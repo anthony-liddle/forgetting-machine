@@ -20,8 +20,6 @@
   --max-width: 640px;
   --padding: clamp(1.5rem, 5vw, 3rem);
 
-  /* Transitions */
-  --fade-duration: 300ms;
 }
 
 *,
@@ -113,7 +111,7 @@ body {
   align-items: center;
   opacity: 0;
   pointer-events: none;
-  transition: opacity 600ms ease;
+  transition: opacity var(--form-fade-in) ease;
 }
 
 .invitation__form.fade-in {

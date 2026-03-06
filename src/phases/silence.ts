@@ -45,13 +45,10 @@ export function renderSilence(
     onReset();
   };
 
-  // Trigger fade-in — double RAF ensures the browser has painted the
-  // initial opacity: 0 before the transition to opacity: 1 begins.
-  requestAnimationFrame(() => {
-    requestAnimationFrame(() => {
-      text.classList.add('fade-in');
-    });
-  });
+  // Trigger fade-in after the pre-hold pause.
+  setTimeout(() => {
+    text.classList.add('fade-in');
+  }, TIMING.SILENCE_PRE_HOLD);
 
   // Early interaction during the initial hold — uses a fast fade so skipping
   // feels responsive rather than making the user wait for the slow fade-out.

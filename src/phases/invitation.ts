@@ -118,6 +118,10 @@ export function renderInvitation(
 
     // Step 4: After a brief delay, fade the form in.
     setTimeout(() => {
+      form.style.setProperty(
+        '--form-fade-in',
+        `${TIMING.SPLASH_FORM_FADE_IN}ms`,
+      );
       form.classList.add('fade-in');
       form.removeAttribute('aria-hidden');
 
