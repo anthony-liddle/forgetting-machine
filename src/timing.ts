@@ -18,10 +18,10 @@ export const TIMING = {
   BROADCAST_FADE_IN: 4000, // Secret text opacity fade-in
 
   // Music
-  MUSIC_FADE_OUT: 5000, // Master volume ramp to zero before stopping the engine
+  MUSIC_FADE_OUT: 7000, // Master volume ramp to zero before stopping the engine
 
   // Silence
-  SILENCE_PRE_HOLD: 2000, // Pause before "Gone." begins to appear
+  SILENCE_PRE_HOLD: 3000, // Pause before "Gone." begins to appear
   SILENCE_FADE_IN_CSS: 3000, // "Gone." opacity transition
   SILENCE_HOLD: 5000, // Hold duration before fade-out begins
   SILENCE_FADE_OUT: 3000, // Normal fade-out wait
