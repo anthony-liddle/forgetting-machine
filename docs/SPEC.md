@@ -4,7 +4,7 @@ A website where you write a secret. It displays it beautifully for exactly 60 se
 
 No database. No logs. No accounts. No server.
 
-*Nothing you write here will be saved. Leave here lighter than before.*
+_Nothing you write here will be saved. Leave here lighter than before._
 
 ---
 
@@ -28,7 +28,7 @@ The user experience has three distinct phases. Each has a different emotional re
 
 **Phase 1 — The Invitation** (Landing)
 
-The user arrives at a quiet, mostly empty page. Dark background. A single heading. A short line of copy. A text area. The page communicates: *this is a safe place to put something down.*
+The user arrives at a quiet, mostly empty page. Dark background. A cinematic splash plays: "The Forgetting Machine" fades in large and centered, holds for a moment, then shrinks and slides up to its settled position. The form — a subheading, a textarea, and the button — fades in below it. The page communicates: _this is a safe place to put something down._
 
 There is no sign-up. No explanation of how it works beyond what's immediately visible. No FAQ. The design should be self-evident. If you have to explain it, you've already broken the spell.
 
@@ -36,24 +36,26 @@ The only interactive element is the text area and a single button. The button do
 
 **Phase 2 — The Broadcast** (60 seconds)
 
-After pressing "Let go," the writing interface disappears. The secret is now displayed in beautiful, centered typography — large, serif, treated with reverence. A thin progress bar (or subtle arc) indicates the remaining time without creating anxiety. There is no numerical countdown. No ticking. Just a quiet visual indicator that recedes like a tide.
+After pressing "Let go," the writing interface disappears. The secret is now displayed in beautiful, centered typography — large, serif, treated with reverence. A thin progress bar at the bottom of the viewport indicates the remaining time without creating anxiety. There is no numerical countdown. No ticking. Just a quiet visual indicator that recedes like a tide.
 
-Over the 60 seconds, the text undergoes a slow visual transformation inspired by a fading radio signal. This is not abrupt. The text doesn't "break" — it *drifts*. Possible treatments, layered progressively:
+Over the 60 seconds, the text undergoes a slow visual transformation. Each character fades independently on its own staggered schedule, creating an organic, non-uniform dissolution. This is not abrupt. The text doesn't "break" — it _drifts_:
 
 - **0–20s**: The text is crisp and clear. Full presence. The user reads it back.
-- **20–40s**: Subtle static/noise begins to creep into the rendering. Faint scan lines. Very slight letter displacement. The signal is weakening. Characters may occasionally flicker or shift by a pixel or two.
-- **40–55s**: The noise increases. Letters become harder to read. The text is still *there* but it's slipping away. Gaps appear. Some characters dissolve into static. The signal is almost out of range.
-- **55–60s**: A final fade. The remaining fragments wash out. The screen goes quiet.
+- **20–40s**: Characters begin to drift — opacity falls gently and warm cream color shifts toward desaturated grey. The signal is weakening.
+- **40–55s**: The fade deepens. Colour continues bleeding toward the background. Letters grow harder to distinguish.
+- **55–60s**: A final whisper. Opacity drops to zero with a 1px blur, each character merging quietly into the dark.
 
-The decay should feel analog, not digital. Not a glitch aesthetic — a *distance* aesthetic. Like holding a transistor radio and watching the signal meter drop.
+The decay feels like distance, not destruction. Not a glitch aesthetic — a _fading_ aesthetic. Like watching a warm light dim across a long corridor.
 
 **Phase 3 — The Silence** (Post-expiry)
 
-The secret is gone. The screen holds on a single line for a few seconds:
+The secret is gone. The screen holds on a single line:
 
-*Gone.*
+_Gone._
 
-Then even that fades. The page returns to Phase 1 — the invitation. Ready for the next person, or the same person, to let go of something else. No confirmation. No "your secret has been deleted" messaging. It's just... not there anymore.
+The word fades in slowly, holds briefly, then fades out. The page returns to Phase 1 — the invitation. Ready for the next person, or the same person, to let go of something else. No confirmation. No "your secret has been deleted" messaging. It's just... not there anymore.
+
+Any keypress or click during Phase 3 skips ahead — after a 500ms debounce to prevent accidental triggers.
 
 ### What It Is Not
 
@@ -72,17 +74,17 @@ Dark, warm, minimal. The page should feel like a late-night radio broadcast — 
 
 ### Color Palette
 
-| Role | Value | Notes |
-|---|---|---|
-| Background | `#0a0a0a` – `#111111` | Near-black, not pure black. Warm. |
-| Primary text | `#e8e0d4` | Warm off-white. Not clinical. |
-| Secondary text | `#6b6560` | Muted warm gray for supporting copy. |
-| Accent | `#c4956a` | Warm amber. Used sparingly — the progress indicator, the button hover. |
-| Static/noise | `#2a2520` – `#4a4540` | Warm grays for the decay particles. |
+| Role           | Value                 | Notes                                                                  |
+| -------------- | --------------------- | ---------------------------------------------------------------------- |
+| Background     | `#0a0a0a` – `#111111` | Near-black, not pure black. Warm.                                      |
+| Primary text   | `#e8e0d4`             | Warm off-white. Not clinical.                                          |
+| Secondary text | `#6b6560`             | Muted warm gray for supporting copy.                                   |
+| Accent         | `#c4956a`             | Warm amber. Used sparingly — the progress indicator, the button hover. |
+| Decay mid      | `#2a2520` – `#4a4540` | Warm grays used as intermediate color targets during character fade.   |
 
 ### Typography
 
-- **Secret display**: A serif typeface. Georgia as the system fallback; load a web font like Playfair Display, Lora, or Libre Baskerville if performance allows. Large — `clamp(1.5rem, 4vw, 2.5rem)`. Generous line height (`1.6–1.8`).
+- **Secret display**: Libre Baskerville (loaded web font), with Georgia and `serif` as fallbacks. Large — `clamp(1.5rem, 4vw, 2.5rem)`. Generous line height (`1.7`).
 - **UI text** (heading, button, "Gone."): A clean sans-serif. System font stack or Inter. Small, understated.
 - **The "Gone." text**: Same serif as the secret. Slightly smaller. Centered. Italic.
 
@@ -92,15 +94,15 @@ Vertically and horizontally centered. Max-width on the text area and display —
 
 ### The Decay Effect
 
-The signal-fade effect is the heart of the visual design. Implementation approaches, in order of preference:
+The fade effect is the heart of the visual design. Each character is wrapped in a `<span>` and assigned a randomised decay schedule. As progress advances, each character independently transitions through three stages:
 
-1. **Canvas overlay**: Render the text in the DOM for accessibility, then overlay a `<canvas>` element that progressively introduces noise, scan lines, and character displacement. The canvas reads the text positions and draws interference patterns over them.
+1. **Drift** — opacity gently falls (1.0 → 0.7); colour shifts from warm cream (`#e8e0d4`) toward desaturated grey (`rgb(160, 155, 148)`).
+2. **Dissolve** — opacity continues falling (0.7 → 0.15); colour shifts from desaturated grey toward the background dark (`rgb(40, 38, 35)`).
+3. **Vanish** — opacity drops to 0 with a subtle 1px blur as the character merges into the background.
 
-2. **Per-character `<span>` manipulation**: Wrap each character in a `<span>`. Over time, apply transforms — `opacity`, `translateX/Y` jitter, `filter: blur()`, and occasionally replace characters with static block characters (`░`, `▒`, `▓`). This is more DOM-heavy but gives precise control.
+Because each character's thresholds are randomised within phase windows, dissolution is organic and non-uniform — some characters linger while others go early. No jitter, no scan lines, no character replacement. Pure fade.
 
-3. **CSS-only with layered pseudo-elements**: Use `::before`/`::after` overlays with animated noise backgrounds (CSS gradients or a small tiled noise texture). Simpler but less character-level control.
-
-The recommended approach is **option 2** — it aligns with the ASCII/character-level aesthetic from your other projects, gives precise timing control per character, and creates the feeling of individual letters losing signal rather than a blanket fade.
+If `prefers-reduced-motion` is set, or if frame performance degrades on device (10+ slow frames detected), the per-character animation is replaced by a simple whole-block opacity fade.
 
 ### Progress Indicator
 
@@ -112,13 +114,13 @@ A single thin horizontal line at the bottom of the viewport (or below the text).
 
 ### Stack
 
-| Layer | Choice | Rationale |
-|---|---|---|
-| Language | TypeScript (vanilla, no framework) | Purity. This is too small and too intentional for React. Direct DOM manipulation. |
-| Build | Vite | Matches your existing toolchain. Fast, zero-config for vanilla TS. |
-| Styling | Plain CSS (single file) | No preprocessor needed. CSS custom properties for the palette. |
-| Hosting | Vercel (or any static host) | Zero server. Just static files. |
-| Font loading | `<link rel="preload">` + `font-display: swap` | Performance-first. System fallback is fine. |
+| Layer        | Choice                                        | Rationale                                                                         |
+| ------------ | --------------------------------------------- | --------------------------------------------------------------------------------- |
+| Language     | TypeScript (vanilla, no framework)            | Purity. This is too small and too intentional for React. Direct DOM manipulation. |
+| Build        | Vite                                          | Matches your existing toolchain. Fast, zero-config for vanilla TS.                |
+| Styling      | Plain CSS (single file)                       | No preprocessor needed. CSS custom properties for the palette.                    |
+| Hosting      | Vercel (or any static host)                   | Zero server. Just static files.                                                   |
+| Font loading | `<link rel="preload">` + `font-display: swap` | Performance-first. System fallback is fine.                                       |
 
 ### Project Structure
 
@@ -126,14 +128,14 @@ A single thin horizontal line at the bottom of the viewport (or below the text).
 the-forgetting-machine/
 ├── src/
 │   ├── main.ts              # Entry point, phase orchestration
+│   ├── timing.ts            # Central animation timing constants
 │   ├── phases/
-│   │   ├── invitation.ts    # Phase 1: text input UI
+│   │   ├── invitation.ts    # Phase 1: splash + text input UI
 │   │   ├── broadcast.ts     # Phase 2: display + decay engine
 │   │   └── silence.ts       # Phase 3: "Gone." + reset
 │   ├── decay/
 │   │   ├── engine.ts        # Decay timing and orchestration
-│   │   ├── effects.ts       # Character-level visual effects
-│   │   └── characters.ts    # Static/noise character sets
+│   │   └── effects.ts       # Character-level visual effects
 │   ├── ui/
 │   │   ├── progress.ts      # Progress bar component
 │   │   └── dom.ts           # DOM helpers (create, clear, animate)
@@ -182,7 +184,7 @@ Each phase owns its own DOM. On transition, the previous phase's DOM is cleared 
 7. Timer hits 0, DOM is cleared            → secret exists nowhere
 ```
 
-At no point does the secret exist in more than one place. Each handoff is a *move*, not a copy.
+At no point does the secret exist in more than one place. Each handoff is a _move_, not a copy.
 
 ### Decay Engine Detail
 
@@ -190,12 +192,12 @@ The decay engine operates on a `requestAnimationFrame` loop for smooth visual up
 
 ```typescript
 interface DecayConfig {
-  totalDuration: number;       // 60000ms
+  totalDuration: number; // 60000ms
   phases: {
-    clear:    [0, 0.33];      // 0-20s: no decay
-    drift:    [0.33, 0.67];   // 20-40s: subtle interference
-    dissolve: [0.67, 0.92];   // 40-55s: heavy decay
-    vanish:   [0.92, 1.0];    // 55-60s: final fade
+    clear: [0, 0.33]; // 0-20s: no decay
+    drift: [0.33, 0.67]; // 20-40s: subtle interference
+    dissolve: [0.67, 0.92]; // 40-55s: heavy decay
+    vanish: [0.92, 1.0]; // 55-60s: final fade
   };
 }
 ```
@@ -204,14 +206,14 @@ Each character `<span>` is assigned a random decay threshold within its phase wi
 
 **Effect types applied per character:**
 
-| Effect | CSS Property | Phase |
-|---|---|---|
-| Opacity reduction | `opacity: 0.7 → 0` | drift → vanish |
-| Horizontal jitter | `translateX(±1-3px)` | drift → dissolve |
-| Vertical drift | `translateY(±1-2px)` | dissolve |
-| Blur | `filter: blur(1-3px)` | dissolve → vanish |
-| Character replacement | Replace with `░`, `▒`, `▓`, or space | dissolve → vanish |
-| Color fade | Shift toward background color | drift → vanish |
+| Effect        | CSS Property                       | Phase    |
+| ------------- | ---------------------------------- | -------- |
+| Opacity drift | `opacity: 1.0 → 0.7`               | drift    |
+| Color drift   | warm cream → desaturated grey      | drift    |
+| Opacity fade  | `opacity: 0.7 → 0.15`              | dissolve |
+| Color fade    | desaturated grey → near-background | dissolve |
+| Final opacity | `opacity: 0.15 → 0`                | vanish   |
+| Blur whisper  | `filter: blur(0 → 1px)`            | vanish   |
 
 ### Security and Privacy Guarantees
 
@@ -253,16 +255,16 @@ What is never tracked: the content of secrets, the length of secrets, the time s
 
 ### Keyboard Support
 
-- `Cmd/Ctrl + Enter` triggers "Let go" (standard form submission shortcut).
-- During Phase 2, `Escape` does nothing. There is no way to cancel, extend, or save. You chose to let go.
-- After Phase 3 resolves, any keypress or click returns to Phase 1.
+- `Enter` triggers "Let go." `Shift+Enter` inserts a newline.
+- During Phase 2, no key does anything. There is no way to cancel, extend, or save. You chose to let go.
+- During Phase 3, any keypress or click skips ahead to Phase 1 (after a 500ms debounce).
 
 ### Mobile Considerations
 
 - The text area should be comfortably sized for thumb typing. Minimum height of ~150px.
-- The decay effect should be performant on mobile. If per-character manipulation causes frame drops, degrade gracefully to a simpler opacity + blur fade on the whole text block. Feature-detect via `requestAnimationFrame` timing.
+- The decay effect degrades automatically on mobile: if 10+ slow frames are detected (>33ms), the per-character animation is replaced by a simple whole-block opacity fade.
 - The progress bar should be visible without scrolling during Phase 2. Ensure the secret display + progress bar fit within the viewport. If the secret is long, allow vertical scroll during Phase 2 but keep the progress bar fixed at the bottom.
-- Respect `prefers-reduced-motion`. If set, skip the character-level decay and use a simple crossfade to "Gone."
+- Respect `prefers-reduced-motion`. If set, skip the character-level decay and use a simple opacity fade on the whole text block.
 
 ---
 
@@ -270,7 +272,7 @@ What is never tracked: the content of secrets, the length of secrets, the time s
 
 Things to resolve during development, not in this spec:
 
-1. **Sound?** A faint ambient hum during Phase 2 that fades with the signal could be beautiful. But it could also be annoying or unexpected. Consider it as a v2 feature, toggled off by default, using the Soundscape Engine. The philosophical argument for it: radio stations have sound. The argument against: silence *is* the sound of letting go.
+1. **Sound?** A faint ambient hum during Phase 2 that fades with the signal could be beautiful. But it could also be annoying or unexpected. Consider it as a v2 feature, toggled off by default, using the Soundscape Engine. The philosophical argument for it: radio stations have sound. The argument against: silence _is_ the sound of letting go.
 
 2. **Repeat visits.** Should the site feel different on a second visit? Currently: no. Every visit is the same. But there's a possible v2 where the landing page copy rotates subtly — different phrasings of the same invitation. Nothing that implies memory of the user. Just variety.
 

@@ -1,5 +1,9 @@
 import { describe, it, expect } from 'vitest';
-import { createProgressBar, updateProgressBar, removeProgressBar } from '../progress';
+import {
+  createProgressBar,
+  updateProgressBar,
+  removeProgressBar,
+} from '../progress';
 
 describe('createProgressBar', () => {
   it('creates a fixed-position element with full width', () => {
