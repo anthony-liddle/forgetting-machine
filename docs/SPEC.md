@@ -4,7 +4,7 @@ A website where you write a secret. It displays it beautifully for exactly 60 se
 
 No database. No logs. No accounts. No server.
 
-*Nothing you write here will be saved. Leave here lighter than before.*
+_Nothing you write here will be saved. Leave here lighter than before._
 
 ---
 
@@ -28,7 +28,7 @@ The user experience has three distinct phases. Each has a different emotional re
 
 **Phase 1 — The Invitation** (Landing)
 
-The user arrives at a quiet, mostly empty page. Dark background. A single heading. A short line of copy. A text area. The page communicates: *this is a safe place to put something down.*
+The user arrives at a quiet, mostly empty page. Dark background. A single heading. A short line of copy. A text area. The page communicates: _this is a safe place to put something down._
 
 There is no sign-up. No explanation of how it works beyond what's immediately visible. No FAQ. The design should be self-evident. If you have to explain it, you've already broken the spell.
 
@@ -38,20 +38,20 @@ The only interactive element is the text area and a single button. The button do
 
 After pressing "Let go," the writing interface disappears. The secret is now displayed in beautiful, centered typography — large, serif, treated with reverence. A thin progress bar (or subtle arc) indicates the remaining time without creating anxiety. There is no numerical countdown. No ticking. Just a quiet visual indicator that recedes like a tide.
 
-Over the 60 seconds, the text undergoes a slow visual transformation inspired by a fading radio signal. This is not abrupt. The text doesn't "break" — it *drifts*. Possible treatments, layered progressively:
+Over the 60 seconds, the text undergoes a slow visual transformation inspired by a fading radio signal. This is not abrupt. The text doesn't "break" — it _drifts_. Possible treatments, layered progressively:
 
 - **0–20s**: The text is crisp and clear. Full presence. The user reads it back.
 - **20–40s**: Subtle static/noise begins to creep into the rendering. Faint scan lines. Very slight letter displacement. The signal is weakening. Characters may occasionally flicker or shift by a pixel or two.
-- **40–55s**: The noise increases. Letters become harder to read. The text is still *there* but it's slipping away. Gaps appear. Some characters dissolve into static. The signal is almost out of range.
+- **40–55s**: The noise increases. Letters become harder to read. The text is still _there_ but it's slipping away. Gaps appear. Some characters dissolve into static. The signal is almost out of range.
 - **55–60s**: A final fade. The remaining fragments wash out. The screen goes quiet.
 
-The decay should feel analog, not digital. Not a glitch aesthetic — a *distance* aesthetic. Like holding a transistor radio and watching the signal meter drop.
+The decay should feel analog, not digital. Not a glitch aesthetic — a _distance_ aesthetic. Like holding a transistor radio and watching the signal meter drop.
 
 **Phase 3 — The Silence** (Post-expiry)
 
 The secret is gone. The screen holds on a single line for a few seconds:
 
-*Gone.*
+_Gone._
 
 Then even that fades. The page returns to Phase 1 — the invitation. Ready for the next person, or the same person, to let go of something else. No confirmation. No "your secret has been deleted" messaging. It's just... not there anymore.
 
@@ -72,13 +72,13 @@ Dark, warm, minimal. The page should feel like a late-night radio broadcast — 
 
 ### Color Palette
 
-| Role | Value | Notes |
-|---|---|---|
-| Background | `#0a0a0a` – `#111111` | Near-black, not pure black. Warm. |
-| Primary text | `#e8e0d4` | Warm off-white. Not clinical. |
-| Secondary text | `#6b6560` | Muted warm gray for supporting copy. |
-| Accent | `#c4956a` | Warm amber. Used sparingly — the progress indicator, the button hover. |
-| Static/noise | `#2a2520` – `#4a4540` | Warm grays for the decay particles. |
+| Role           | Value                 | Notes                                                                  |
+| -------------- | --------------------- | ---------------------------------------------------------------------- |
+| Background     | `#0a0a0a` – `#111111` | Near-black, not pure black. Warm.                                      |
+| Primary text   | `#e8e0d4`             | Warm off-white. Not clinical.                                          |
+| Secondary text | `#6b6560`             | Muted warm gray for supporting copy.                                   |
+| Accent         | `#c4956a`             | Warm amber. Used sparingly — the progress indicator, the button hover. |
+| Static/noise   | `#2a2520` – `#4a4540` | Warm grays for the decay particles.                                    |
 
 ### Typography
 
@@ -112,13 +112,13 @@ A single thin horizontal line at the bottom of the viewport (or below the text).
 
 ### Stack
 
-| Layer | Choice | Rationale |
-|---|---|---|
-| Language | TypeScript (vanilla, no framework) | Purity. This is too small and too intentional for React. Direct DOM manipulation. |
-| Build | Vite | Matches your existing toolchain. Fast, zero-config for vanilla TS. |
-| Styling | Plain CSS (single file) | No preprocessor needed. CSS custom properties for the palette. |
-| Hosting | Vercel (or any static host) | Zero server. Just static files. |
-| Font loading | `<link rel="preload">` + `font-display: swap` | Performance-first. System fallback is fine. |
+| Layer        | Choice                                        | Rationale                                                                         |
+| ------------ | --------------------------------------------- | --------------------------------------------------------------------------------- |
+| Language     | TypeScript (vanilla, no framework)            | Purity. This is too small and too intentional for React. Direct DOM manipulation. |
+| Build        | Vite                                          | Matches your existing toolchain. Fast, zero-config for vanilla TS.                |
+| Styling      | Plain CSS (single file)                       | No preprocessor needed. CSS custom properties for the palette.                    |
+| Hosting      | Vercel (or any static host)                   | Zero server. Just static files.                                                   |
+| Font loading | `<link rel="preload">` + `font-display: swap` | Performance-first. System fallback is fine.                                       |
 
 ### Project Structure
 
@@ -182,7 +182,7 @@ Each phase owns its own DOM. On transition, the previous phase's DOM is cleared 
 7. Timer hits 0, DOM is cleared            → secret exists nowhere
 ```
 
-At no point does the secret exist in more than one place. Each handoff is a *move*, not a copy.
+At no point does the secret exist in more than one place. Each handoff is a _move_, not a copy.
 
 ### Decay Engine Detail
 
@@ -190,12 +190,12 @@ The decay engine operates on a `requestAnimationFrame` loop for smooth visual up
 
 ```typescript
 interface DecayConfig {
-  totalDuration: number;       // 60000ms
+  totalDuration: number; // 60000ms
   phases: {
-    clear:    [0, 0.33];      // 0-20s: no decay
-    drift:    [0.33, 0.67];   // 20-40s: subtle interference
-    dissolve: [0.67, 0.92];   // 40-55s: heavy decay
-    vanish:   [0.92, 1.0];    // 55-60s: final fade
+    clear: [0, 0.33]; // 0-20s: no decay
+    drift: [0.33, 0.67]; // 20-40s: subtle interference
+    dissolve: [0.67, 0.92]; // 40-55s: heavy decay
+    vanish: [0.92, 1.0]; // 55-60s: final fade
   };
 }
 ```
@@ -204,14 +204,14 @@ Each character `<span>` is assigned a random decay threshold within its phase wi
 
 **Effect types applied per character:**
 
-| Effect | CSS Property | Phase |
-|---|---|---|
-| Opacity reduction | `opacity: 0.7 → 0` | drift → vanish |
-| Horizontal jitter | `translateX(±1-3px)` | drift → dissolve |
-| Vertical drift | `translateY(±1-2px)` | dissolve |
-| Blur | `filter: blur(1-3px)` | dissolve → vanish |
+| Effect                | CSS Property                         | Phase             |
+| --------------------- | ------------------------------------ | ----------------- |
+| Opacity reduction     | `opacity: 0.7 → 0`                   | drift → vanish    |
+| Horizontal jitter     | `translateX(±1-3px)`                 | drift → dissolve  |
+| Vertical drift        | `translateY(±1-2px)`                 | dissolve          |
+| Blur                  | `filter: blur(1-3px)`                | dissolve → vanish |
 | Character replacement | Replace with `░`, `▒`, `▓`, or space | dissolve → vanish |
-| Color fade | Shift toward background color | drift → vanish |
+| Color fade            | Shift toward background color        | drift → vanish    |
 
 ### Security and Privacy Guarantees
 
@@ -270,7 +270,7 @@ What is never tracked: the content of secrets, the length of secrets, the time s
 
 Things to resolve during development, not in this spec:
 
-1. **Sound?** A faint ambient hum during Phase 2 that fades with the signal could be beautiful. But it could also be annoying or unexpected. Consider it as a v2 feature, toggled off by default, using the Soundscape Engine. The philosophical argument for it: radio stations have sound. The argument against: silence *is* the sound of letting go.
+1. **Sound?** A faint ambient hum during Phase 2 that fades with the signal could be beautiful. But it could also be annoying or unexpected. Consider it as a v2 feature, toggled off by default, using the Soundscape Engine. The philosophical argument for it: radio stations have sound. The argument against: silence _is_ the sound of letting go.
 
 2. **Repeat visits.** Should the site feel different on a second visit? Currently: no. Every visit is the same. But there's a possible v2 where the landing page copy rotates subtly — different phrasings of the same invitation. Nothing that implies memory of the user. Just variety.
 

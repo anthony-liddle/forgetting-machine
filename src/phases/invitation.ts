@@ -17,7 +17,11 @@ export function renderInvitation(
 ): void {
   const phase = createElement('div', 'phase invitation');
 
-  const heading = createElement('h1', 'invitation__heading invitation__heading--splash', 'The Forgetting Machine');
+  const heading = createElement(
+    'h1',
+    'invitation__heading invitation__heading--splash',
+    'The Forgetting Machine',
+  );
 
   // Build form wrapper — present in DOM immediately (opacity: 0 via CSS)
   // so querySelector works synchronously in tests and the layout is stable.

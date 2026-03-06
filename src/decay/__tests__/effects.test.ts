@@ -1,5 +1,9 @@
 import { describe, it, expect, beforeEach } from 'vitest';
-import { applyDriftEffect, applyDissolveEffect, applyVanishEffect } from '../effects';
+import {
+  applyDriftEffect,
+  applyDissolveEffect,
+  applyVanishEffect,
+} from '../effects';
 
 describe('applyDriftEffect', () => {
   let span: HTMLSpanElement;

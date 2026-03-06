@@ -1,1 +1,2 @@
-npx tsc --noEmit && npx eslint src/
+pnpm lint-staged
+pnpm typecheck

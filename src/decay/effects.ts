@@ -2,7 +2,10 @@
  * Drift phase: gently reduce opacity (1.0 → 0.7) and shift colour
  * from warm cream toward a desaturated grey.
  */
-export function applyDriftEffect(span: HTMLSpanElement, intensity: number): void {
+export function applyDriftEffect(
+  span: HTMLSpanElement,
+  intensity: number,
+): void {
   // Opacity: 1.0 → 0.7
   const opacity = 1 - intensity * 0.3;
   span.style.opacity = String(opacity);
@@ -20,7 +23,10 @@ export function applyDriftEffect(span: HTMLSpanElement, intensity: number): void
  * Dissolve phase: continue fading opacity (0.7 → 0.15) and shift
  * colour from desaturated grey toward the dark background.
  */
-export function applyDissolveEffect(span: HTMLSpanElement, intensity: number): void {
+export function applyDissolveEffect(
+  span: HTMLSpanElement,
+  intensity: number,
+): void {
   // Opacity: 0.7 → 0.15
   const opacity = 0.7 - intensity * 0.55;
   span.style.opacity = String(Math.max(0, opacity));
@@ -37,7 +43,10 @@ export function applyDissolveEffect(span: HTMLSpanElement, intensity: number): v
  * Vanish phase: final fade to invisible (0.15 → 0) with a subtle
  * blur (max 1px) as the character merges into the background.
  */
-export function applyVanishEffect(span: HTMLSpanElement, intensity: number): void {
+export function applyVanishEffect(
+  span: HTMLSpanElement,
+  intensity: number,
+): void {
   // Opacity: 0.15 → 0
   const opacity = 0.15 * (1 - intensity);
   span.style.opacity = String(Math.max(0, opacity));

@@ -30,7 +30,9 @@ describe('renderInvitation', () => {
   });
 
   it('renders a disabled button', () => {
-    const button = container.querySelector('.invitation__button') as HTMLButtonElement;
+    const button = container.querySelector(
+      '.invitation__button',
+    ) as HTMLButtonElement;
     expect(button).not.toBeNull();
     expect(button.textContent).toBe('Let go');
     expect(button.disabled).toBe(true);
@@ -38,7 +40,9 @@ describe('renderInvitation', () => {
 
   it('enables button when textarea has non-whitespace content', () => {
     const textarea = container.querySelector('textarea') as HTMLTextAreaElement;
-    const button = container.querySelector('.invitation__button') as HTMLButtonElement;
+    const button = container.querySelector(
+      '.invitation__button',
+    ) as HTMLButtonElement;
 
     textarea.value = '  hello  ';
     textarea.dispatchEvent(new Event('input'));
@@ -48,7 +52,9 @@ describe('renderInvitation', () => {
 
   it('keeps button disabled for whitespace-only content', () => {
     const textarea = container.querySelector('textarea') as HTMLTextAreaElement;
-    const button = container.querySelector('.invitation__button') as HTMLButtonElement;
+    const button = container.querySelector(
+      '.invitation__button',
+    ) as HTMLButtonElement;
 
     textarea.value = '   \n\t  ';
     textarea.dispatchEvent(new Event('input'));
@@ -58,7 +64,9 @@ describe('renderInvitation', () => {
 
   it('calls onLetGo with text when button is clicked', () => {
     const textarea = container.querySelector('textarea') as HTMLTextAreaElement;
-    const button = container.querySelector('.invitation__button') as HTMLButtonElement;
+    const button = container.querySelector(
+      '.invitation__button',
+    ) as HTMLButtonElement;
 
     textarea.value = 'my secret';
     textarea.dispatchEvent(new Event('input'));
@@ -69,7 +77,9 @@ describe('renderInvitation', () => {
 
   it('truncates text at 5000 characters', () => {
     const textarea = container.querySelector('textarea') as HTMLTextAreaElement;
-    const button = container.querySelector('.invitation__button') as HTMLButtonElement;
+    const button = container.querySelector(
+      '.invitation__button',
+    ) as HTMLButtonElement;
 
     textarea.value = 'a'.repeat(6000);
     textarea.dispatchEvent(new Event('input'));
@@ -80,8 +90,12 @@ describe('renderInvitation', () => {
 
   it('renders heading with splash class initially', () => {
     const heading = container.querySelector('.invitation__heading');
-    expect(heading!.classList.contains('invitation__heading--splash')).toBe(true);
-    expect(heading!.classList.contains('invitation__heading--settled')).toBe(false);
+    expect(heading!.classList.contains('invitation__heading--splash')).toBe(
+      true,
+    );
+    expect(heading!.classList.contains('invitation__heading--settled')).toBe(
+      false,
+    );
   });
 
   it('wraps subheading, textarea, and button in .invitation__form', () => {

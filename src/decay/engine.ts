@@ -59,7 +59,10 @@ export function createCharacterThresholds(
   for (let i = 0; i < count; i++) {
     thresholds.push({
       driftAt: randomInRange(config.phases.drift[0], config.phases.drift[1]),
-      dissolveAt: randomInRange(config.phases.dissolve[0], config.phases.dissolve[1]),
+      dissolveAt: randomInRange(
+        config.phases.dissolve[0],
+        config.phases.dissolve[1],
+      ),
       vanishAt: randomInRange(config.phases.vanish[0], config.phases.vanish[1]),
     });
   }

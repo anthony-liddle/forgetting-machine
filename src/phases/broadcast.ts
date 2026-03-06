@@ -1,5 +1,9 @@
 import { createElement, clearContainer } from '@/ui/dom';
-import { createProgressBar, updateProgressBar, removeProgressBar } from '@/ui/progress';
+import {
+  createProgressBar,
+  updateProgressBar,
+  removeProgressBar,
+} from '@/ui/progress';
 import {
   DEFAULT_DECAY_CONFIG,
   createCharacterThresholds,
@@ -8,7 +12,11 @@ import {
   DecayPhase,
 } from '@/decay/engine';
 import type { DecayConfig } from '@/decay/engine';
-import { applyDriftEffect, applyDissolveEffect, applyVanishEffect } from '@/decay/effects';
+import {
+  applyDriftEffect,
+  applyDissolveEffect,
+  applyVanishEffect,
+} from '@/decay/effects';
 import { TIMING } from '@/timing';
 
 /**
@@ -95,7 +103,10 @@ export function renderBroadcast(
   document.body.appendChild(progressBar);
 
   // Fade in the broadcast text (duration: TIMING.BROADCAST_FADE_IN, controlled by CSS)
-  textContainer.style.setProperty('--broadcast-fade-in', `${TIMING.BROADCAST_FADE_IN}ms`);
+  textContainer.style.setProperty(
+    '--broadcast-fade-in',
+    `${TIMING.BROADCAST_FADE_IN}ms`,
+  );
   requestAnimationFrame(() => {
     requestAnimationFrame(() => {
       textContainer.classList.add('fade-in');
@@ -148,18 +159,15 @@ export function renderBroadcast(
         if (currentPhase === DecayPhase.Clear) return;
 
         if (progress >= t.vanishAt) {
-          const vanishIntensity =
-            (progress - t.vanishAt) / (1 - t.vanishAt);
+          const vanishIntensity = (progress - t.vanishAt) / (1 - t.vanishAt);
           applyVanishEffect(span, Math.min(1, vanishIntensity));
         } else if (progress >= t.dissolveAt) {
           const dissolveIntensity =
-            (progress - t.dissolveAt) /
-            (t.vanishAt - t.dissolveAt);
+            (progress - t.dissolveAt) / (t.vanishAt - t.dissolveAt);
           applyDissolveEffect(span, Math.min(1, dissolveIntensity));
         } else if (progress >= t.driftAt) {
           const driftIntensity =
-            (progress - t.driftAt) /
-            (t.dissolveAt - t.driftAt);
+            (progress - t.driftAt) / (t.dissolveAt - t.driftAt);
           applyDriftEffect(span, Math.min(1, driftIntensity));
         }
       });
