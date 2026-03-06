@@ -1,3 +1,5 @@
+import { TIMING } from '@/timing';
+
 /** Create a DOM element with an optional CSS class and text content. */
 export function createElement(
   tag: string,
@@ -24,10 +26,10 @@ export function clearContainer(container: HTMLElement): void {
  */
 export function fadeOut(element: HTMLElement): Promise<void> {
   return new Promise((resolve) => {
+    element.style.setProperty('--fade-duration', `${TIMING.PHASE_FADE_OUT}ms`);
     element.classList.add('fade-out');
     element.addEventListener('transitionend', () => resolve(), { once: true });
-    // Fallback if transition doesn't fire
-    setTimeout(resolve, 400);
+    setTimeout(resolve, TIMING.PHASE_FADE_OUT + 50);
   });
 }
 

@@ -38,7 +38,7 @@ function init(): void {
         }
 
         case 'silence':
-          musicManager.stop();
+          musicManager.fadeOut();
           renderSilence(root, () => {
             transitionTo('invitation');
           });
