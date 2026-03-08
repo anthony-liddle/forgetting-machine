@@ -30,7 +30,9 @@ function init(): void {
 
         case 'broadcast': {
           if (!secret) return;
-          musicManager.initialize().then(() => musicManager.start());
+          musicManager
+            .initialize(secret.length)
+            .then(() => musicManager.start());
           renderBroadcast(root, secret, () => {
             transitionTo('silence');
           });

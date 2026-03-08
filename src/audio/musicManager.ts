@@ -1,30 +1,24 @@
-import { AudioEngine, builtInPresets } from 'soundscape-engine';
+import { AudioEngine } from 'soundscape-engine';
 import type { SoundscapeState } from 'soundscape-engine';
 import { TIMING } from '@/timing';
-
-type MusicData = Omit<SoundscapeState, 'presets'>;
+import { generateComposition } from '@/audio/musicComposer';
 
 class MusicManager {
   private engine = new AudioEngine();
   private state: SoundscapeState | null = null;
   private fadingOut = false;
 
-  private async load(): Promise<void> {
-    const res = await fetch('/music.json');
-    const data: MusicData = await res.json();
-    this.state = { ...data, presets: builtInPresets };
-  }
-
   /**
-   * Create the AudioContext and fetch the composition. Must be called
-   * inside a user-gesture handler (the "Let go" button satisfies this).
+   * Generate the composition from char count and create the AudioContext.
+   * Must be called inside a user-gesture handler (the "Let go" button).
    */
-  async initialize(): Promise<void> {
-    await Promise.all([this.engine.initialize(), this.load()]);
+  async initialize(charCount: number): Promise<void> {
+    this.state = generateComposition(charCount);
+    await this.engine.initialize();
   }
 
   /**
-   * Begin the 60-second through-composed piece. Plays once, no looping.
+   * Begin the 70-beat through-composed piece. Plays once, no looping.
    */
   start(): void {
     if (!this.state) return;
