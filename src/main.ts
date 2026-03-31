@@ -1,9 +1,13 @@
 import './style.css';
+import { inject } from '@vercel/analytics';
 import { renderInvitation } from '@/phases/invitation';
 import { renderBroadcast } from '@/phases/broadcast';
 import { renderSilence } from '@/phases/silence';
 import { clearContainer, fadeOut } from '@/ui/dom';
 import { musicManager } from '@/audio/musicManager';
+
+// Initialize Vercel Web Analytics
+inject();
 
 type Phase = 'invitation' | 'broadcast' | 'silence';
 
