@@ -19,6 +19,8 @@ function init(): void {
   const root = document.getElementById('app');
   if (!root) return;
 
+  let invitationShownBefore = false;
+
   const transitionTo = (phase: Phase, secret?: string): void => {
     const currentEl = root.querySelector('.phase') as HTMLElement | null;
 
@@ -26,11 +28,18 @@ function init(): void {
       clearContainer(root);
 
       switch (phase) {
-        case 'invitation':
-          renderInvitation(root, (text: string) => {
-            transitionTo('broadcast', text);
-          });
+        case 'invitation': {
+          const isReset = invitationShownBefore;
+          invitationShownBefore = true;
+          renderInvitation(
+            root,
+            (text: string) => {
+              transitionTo('broadcast', text);
+            },
+            isReset,
+          );
           break;
+        }
 
         case 'broadcast': {
           if (!secret) return;

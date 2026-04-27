@@ -21,9 +21,12 @@ export const TIMING = {
   MUSIC_FADE_OUT: 7000, // Master volume ramp to zero before stopping the engine
 
   // Silence
-  SILENCE_PRE_HOLD: 3000, // Pause before "Gone." begins to appear
+  SILENCE_PRE_HOLD: 3000, // Pause before "Gone." begins to appear visually
   SILENCE_FADE_IN_CSS: 3000, // "Gone." opacity transition
-  SILENCE_HOLD: 5000, // Hold duration before fade-out begins
+  // Announcement fires after music fully fades (MUSIC_FADE_OUT) plus a beat of silence.
+  // Screen readers hear silence before "Gone." lands, matching the visual weight of the moment.
+  SILENCE_ANNOUNCE_DELAY: 8500, // MUSIC_FADE_OUT (7000) + silence beat (1500)
+  SILENCE_HOLD: 11000, // Extended to keep "Gone." visible after the announcement
   SILENCE_FADE_OUT: 3000, // Normal fade-out wait
   SILENCE_SKIP_FADE_OUT: 500, // Fast fade-out when the user clicks/keys to skip early
 } as const;

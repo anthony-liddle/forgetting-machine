@@ -25,9 +25,11 @@ export function renderSilence(
   phase.appendChild(liveRegion);
   container.appendChild(phase);
 
+  // Announce after the music has fully faded and a beat of silence has passed,
+  // so the word lands into actual quiet rather than over fading audio.
   setTimeout(() => {
     liveRegion.textContent = 'Gone.';
-  }, 100);
+  }, TIMING.SILENCE_ANNOUNCE_DELAY);
   text.style.setProperty(
     '--silence-fade-in',
     `${TIMING.SILENCE_FADE_IN_CSS}ms`,

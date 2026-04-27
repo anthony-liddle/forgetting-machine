@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeEach, vi } from 'vitest';
+import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import { renderBroadcast, wrapTextInSpans } from '../broadcast';
 
 // jsdom doesn't implement matchMedia
@@ -55,6 +55,14 @@ describe('renderBroadcast', () => {
     container = document.createElement('div');
   });
 
+  afterEach(() => {
+    // renderBroadcast appends elements directly to document.body; clean up
+    // between tests so queries don't find stale elements from prior runs.
+    document.body
+      .querySelectorAll('[aria-live], .progress')
+      .forEach((el) => el.remove());
+  });
+
   it('renders the secret text as character spans', () => {
     renderBroadcast(container, 'Test', vi.fn());
     const chars = container.querySelectorAll('.char');
@@ -67,14 +75,20 @@ describe('renderBroadcast', () => {
     expect(bar).not.toBeNull();
   });
 
-  it('creates an aria-live region that announces the secret after a brief delay', () => {
+  it('creates an aria-live region on document.body that announces the secret after a delay', () => {
     vi.useFakeTimers();
     renderBroadcast(container, 'My secret', vi.fn());
-    const live = container.querySelector('[aria-live]');
+    const live = document.body.querySelector('[aria-live="polite"]');
     expect(live).not.toBeNull();
     expect(live!.textContent).toBe('');
-    vi.advanceTimersByTime(100);
+    vi.advanceTimersByTime(500);
     expect(live!.textContent).toBe('My secret');
     vi.useRealTimers();
+  });
+
+  it('marks the text container aria-hidden so VoiceOver skips individual char spans', () => {
+    renderBroadcast(container, 'Test', vi.fn());
+    const textContainer = container.querySelector('.broadcast__text');
+    expect(textContainer!.getAttribute('aria-hidden')).toBe('true');
   });
 });

@@ -89,25 +89,32 @@ export function renderBroadcast(
   // Wrap secret into per-character spans
   const charSpans = wrapTextInSpans(secret, textContainer);
 
-  // Accessibility: aria-live region for the secret text.
-  // The region must be in the DOM (empty) before content is injected so
-  // VoiceOver registers it as a monitored live region and announces the
-  // subsequent change rather than ignoring pre-existing content.
+  // textContainer is purely visual — individual char spans exist only for the
+  // decay animation. Mark the whole tree aria-hidden so VoiceOver never reads
+  // individual characters; the live region below is the accessible text.
+  textContainer.setAttribute('aria-hidden', 'true');
+
+  // Accessibility: polite live region for the full secret text.
+  // Appended to document.body (not inside the phase) so VoiceOver treats it
+  // as a global announcement rather than content to navigate into. Must be in
+  // the DOM empty first; VoiceOver announces the subsequent change, not
+  // pre-existing content. 500ms gives VoiceOver time to settle after the
+  // focus loss that occurs when the invitation phase is removed.
   const liveRegion = createElement('div', 'sr-only');
   liveRegion.setAttribute('aria-live', 'polite');
+  liveRegion.setAttribute('aria-atomic', 'true');
 
   // Progress bar
   const progressBar = createProgressBar();
 
   phase.appendChild(textContainer);
-  phase.appendChild(liveRegion);
   container.appendChild(phase);
+  document.body.appendChild(liveRegion);
   document.body.appendChild(progressBar);
 
-  // Inject the secret after one task turn so VoiceOver observes the change.
   setTimeout(() => {
     liveRegion.textContent = secret;
-  }, 100);
+  }, 500);
 
   // Fade in the broadcast text (duration: TIMING.BROADCAST_FADE_IN, controlled by CSS)
   textContainer.style.setProperty(
@@ -183,6 +190,7 @@ export function renderBroadcast(
       // Clear the live region first so screen readers can't re-read the secret,
       // then erase the visible characters, then dismantle the rest.
       liveRegion.textContent = '';
+      liveRegion.remove();
       charSpans.forEach((span) => {
         span.textContent = '';
       });

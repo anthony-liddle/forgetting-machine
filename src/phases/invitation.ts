@@ -14,6 +14,7 @@ const MAX_SECRET_LENGTH = 5000;
 export function renderInvitation(
   container: HTMLElement,
   onLetGo: (secret: string) => void,
+  isReset = false,
 ): void {
   const phase = createElement('div', 'phase invitation');
 
@@ -22,6 +23,15 @@ export function renderInvitation(
     'invitation__heading invitation__heading--splash',
     'The Forgetting Machine',
   );
+
+  // On reset the h1 is already in the document from a prior render, so
+  // VoiceOver has no reason to re-read it. This polite live region fires
+  // "The Forgetting Machine" again right before focus moves to the input,
+  // giving screen reader users the same headed-then-focused sequence they
+  // experienced on the initial page load.
+  const headingAnnouncement = createElement('div', 'sr-only');
+  headingAnnouncement.setAttribute('aria-live', 'polite');
+  headingAnnouncement.setAttribute('aria-atomic', 'true');
 
   // Build form wrapper — present in DOM immediately (opacity: 0 via CSS)
   // so querySelector works synchronously in tests and the layout is stable.
@@ -84,6 +94,7 @@ export function renderInvitation(
   // The form starts invisible (opacity: 0 via .invitation__form CSS).
   phase.appendChild(heading);
   phase.appendChild(form);
+  phase.appendChild(headingAnnouncement);
   container.appendChild(phase);
 
   // Start heading invisible; fade-in is triggered after SPLASH_FADE_IN_HOLD.
@@ -127,7 +138,18 @@ export function renderInvitation(
       form.classList.add('fade-in');
       form.removeAttribute('aria-hidden');
 
+      // On reset, re-announce the heading before focus moves to the input
+      // so screen readers hear: "The Forgetting Machine" → [pause] →
+      // "Write something…" — matching the initial-load sequence.
+      if (isReset) {
+        setTimeout(() => {
+          headingAnnouncement.textContent = 'The Forgetting Machine';
+        }, 100);
+      }
+
       // Auto-focus on desktop after form finishes fading in.
+      // The SPLASH_FORM_FADE_IN gap (~4s) creates the natural pause between
+      // the heading announcement and the input description.
       setTimeout(() => {
         if (!isMobile()) {
           textarea.focus();

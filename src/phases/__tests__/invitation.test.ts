@@ -1,5 +1,6 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { renderInvitation } from '../invitation';
+import { TIMING } from '../../timing';
 
 describe('renderInvitation', () => {
   let container: HTMLElement;
@@ -104,5 +105,30 @@ describe('renderInvitation', () => {
     expect(form!.querySelector('.invitation__subheading')).not.toBeNull();
     expect(form!.querySelector('textarea')).not.toBeNull();
     expect(form!.querySelector('.invitation__button')).not.toBeNull();
+  });
+
+  it('does not fire the heading live announcement on initial load', () => {
+    vi.useFakeTimers();
+    const freshContainer = document.createElement('div');
+    renderInvitation(freshContainer, vi.fn(), false);
+    const announcement = freshContainer.querySelector('[aria-live="polite"]');
+    vi.advanceTimersByTime(TIMING.SPLASH_HOLD + TIMING.SPLASH_FORM_DELAY + 200);
+    expect(announcement!.textContent).toBe('');
+    vi.useRealTimers();
+  });
+
+  it('re-announces the heading via live region on reset before focus moves to input', () => {
+    vi.useFakeTimers();
+    const freshContainer = document.createElement('div');
+    renderInvitation(freshContainer, vi.fn(), true);
+    const announcement = freshContainer.querySelector('[aria-live="polite"]');
+    expect(announcement).not.toBeNull();
+    // Before the form reveals, announcement is empty
+    vi.advanceTimersByTime(TIMING.SPLASH_HOLD + TIMING.SPLASH_FORM_DELAY);
+    expect(announcement!.textContent).toBe('');
+    // After form reveals + 100ms, heading is announced
+    vi.advanceTimersByTime(100);
+    expect(announcement!.textContent).toBe('The Forgetting Machine');
+    vi.useRealTimers();
   });
 });
