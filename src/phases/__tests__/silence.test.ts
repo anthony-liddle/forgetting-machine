@@ -15,10 +15,14 @@ describe('renderSilence', () => {
     expect(text!.textContent).toBe('Gone.');
   });
 
-  it('announces "Gone." to screen readers via aria-live', () => {
+  it('announces "Gone." to screen readers via aria-live after a brief delay', () => {
+    vi.useFakeTimers();
     renderSilence(container, vi.fn());
     const live = container.querySelector('[aria-live]');
     expect(live).not.toBeNull();
+    expect(live!.textContent).toBe('');
+    vi.advanceTimersByTime(100);
     expect(live!.textContent).toBe('Gone.');
+    vi.useRealTimers();
   });
 });

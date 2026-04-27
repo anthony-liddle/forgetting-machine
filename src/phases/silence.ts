@@ -15,14 +15,19 @@ export function renderSilence(
 
   const text = createElement('span', 'silence__text', 'Gone.');
 
-  // Aria-live for screen readers
+  // Assertive live region for the "Gone." announcement.
+  // Must be in the DOM empty first so VoiceOver is already monitoring it
+  // when the content is injected, guaranteeing the announcement fires.
   const liveRegion = createElement('div', 'sr-only');
   liveRegion.setAttribute('aria-live', 'assertive');
-  liveRegion.textContent = 'Gone.';
 
   phase.appendChild(text);
   phase.appendChild(liveRegion);
   container.appendChild(phase);
+
+  setTimeout(() => {
+    liveRegion.textContent = 'Gone.';
+  }, 100);
   text.style.setProperty(
     '--silence-fade-in',
     `${TIMING.SILENCE_FADE_IN_CSS}ms`,

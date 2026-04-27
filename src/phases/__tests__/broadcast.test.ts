@@ -67,10 +67,14 @@ describe('renderBroadcast', () => {
     expect(bar).not.toBeNull();
   });
 
-  it('creates an aria-live region with the secret text', () => {
+  it('creates an aria-live region that announces the secret after a brief delay', () => {
+    vi.useFakeTimers();
     renderBroadcast(container, 'My secret', vi.fn());
     const live = container.querySelector('[aria-live]');
     expect(live).not.toBeNull();
+    expect(live!.textContent).toBe('');
+    vi.advanceTimersByTime(100);
     expect(live!.textContent).toBe('My secret');
+    vi.useRealTimers();
   });
 });

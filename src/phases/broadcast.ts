@@ -89,10 +89,12 @@ export function renderBroadcast(
   // Wrap secret into per-character spans
   const charSpans = wrapTextInSpans(secret, textContainer);
 
-  // Accessibility: aria-live region with full text
+  // Accessibility: aria-live region for the secret text.
+  // The region must be in the DOM (empty) before content is injected so
+  // VoiceOver registers it as a monitored live region and announces the
+  // subsequent change rather than ignoring pre-existing content.
   const liveRegion = createElement('div', 'sr-only');
   liveRegion.setAttribute('aria-live', 'polite');
-  liveRegion.textContent = secret;
 
   // Progress bar
   const progressBar = createProgressBar();
@@ -101,6 +103,11 @@ export function renderBroadcast(
   phase.appendChild(liveRegion);
   container.appendChild(phase);
   document.body.appendChild(progressBar);
+
+  // Inject the secret after one task turn so VoiceOver observes the change.
+  setTimeout(() => {
+    liveRegion.textContent = secret;
+  }, 100);
 
   // Fade in the broadcast text (duration: TIMING.BROADCAST_FADE_IN, controlled by CSS)
   textContainer.style.setProperty(
@@ -173,11 +180,12 @@ export function renderBroadcast(
       });
     },
     () => {
-      // Cleanup: clear all span content before removing
+      // Clear the live region first so screen readers can't re-read the secret,
+      // then erase the visible characters, then dismantle the rest.
+      liveRegion.textContent = '';
       charSpans.forEach((span) => {
         span.textContent = '';
       });
-      liveRegion.textContent = '';
       removeProgressBar(progressBar);
       clearContainer(textContainer);
       onComplete();

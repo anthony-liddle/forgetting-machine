@@ -33,6 +33,7 @@ export function renderInvitation(
     'invitation__subheading',
     'Nothing you write here will be saved.',
   );
+  subheading.id = 'invitation-hint';
 
   const textarea = document.createElement('textarea');
   textarea.className = 'invitation__textarea';
@@ -41,6 +42,7 @@ export function renderInvitation(
   textarea.setAttribute('autocorrect', 'off');
   textarea.setAttribute('autocapitalize', 'off');
   textarea.setAttribute('aria-label', 'Write something you want to let go of');
+  textarea.setAttribute('aria-describedby', 'invitation-hint');
   textarea.rows = 1;
 
   const button = document.createElement('button');
