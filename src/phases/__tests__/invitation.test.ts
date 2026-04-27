@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeEach, vi } from 'vitest';
+import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import { renderInvitation } from '../invitation';
 import { TIMING } from '../../timing';
 
@@ -10,6 +10,10 @@ describe('renderInvitation', () => {
     container = document.createElement('div');
     onLetGo = vi.fn<(secret: string) => void>();
     renderInvitation(container, onLetGo);
+  });
+
+  afterEach(() => {
+    document.getElementById('broadcast-announce')?.remove();
   });
 
   it('renders a heading', () => {
@@ -105,6 +109,25 @@ describe('renderInvitation', () => {
     expect(form!.querySelector('.invitation__subheading')).not.toBeNull();
     expect(form!.querySelector('textarea')).not.toBeNull();
     expect(form!.querySelector('.invitation__button')).not.toBeNull();
+  });
+
+  it('creates #broadcast-announce live region on body and focuses it on button click', () => {
+    const textarea = container.querySelector('textarea') as HTMLTextAreaElement;
+    const button = container.querySelector(
+      '.invitation__button',
+    ) as HTMLButtonElement;
+
+    textarea.value = 'test secret';
+    textarea.dispatchEvent(new Event('input'));
+    button.click();
+
+    const announceEl = document.getElementById('broadcast-announce');
+    expect(announceEl).not.toBeNull();
+    expect(announceEl!.parentElement).toBe(document.body);
+    expect(announceEl!.getAttribute('aria-live')).toBe('polite');
+    expect(announceEl!.getAttribute('aria-atomic')).toBe('true');
+    expect(announceEl!.getAttribute('tabindex')).toBe('-1');
+    expect(document.activeElement).toBe(announceEl);
   });
 
   it('does not fire the heading live announcement on initial load', () => {

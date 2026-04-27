@@ -4,8 +4,9 @@ import { TIMING } from '@/timing';
 /**
  * Render the silence phase: display "Gone." with a fade-in, hold for
  * SILENCE_HOLD ms, then fade out and call `onReset` to return to invitation.
- * The user can click or press any key to skip ahead at any point
- * (after a 500ms debounce to avoid accidental triggers).
+ * Early-interaction shortcuts are only registered after "Gone." has been
+ * announced (~SILENCE_ANNOUNCE_DELAY + 500ms) to prevent the user from
+ * clearing the phase before the announcement fires.
  */
 export function renderSilence(
   container: HTMLElement,
@@ -25,11 +26,6 @@ export function renderSilence(
   phase.appendChild(liveRegion);
   container.appendChild(phase);
 
-  // Announce after the music has fully faded and a beat of silence has passed,
-  // so the word lands into actual quiet rather than over fading audio.
-  setTimeout(() => {
-    liveRegion.textContent = 'Gone.';
-  }, TIMING.SILENCE_ANNOUNCE_DELAY);
   text.style.setProperty(
     '--silence-fade-in',
     `${TIMING.SILENCE_FADE_IN_CSS}ms`,
@@ -39,6 +35,7 @@ export function renderSilence(
 
   const cleanup = () => {
     hasReset = true;
+    clearTimeout(announceTimeout);
     clearTimeout(fadeTimeout);
     document.removeEventListener('keydown', earlyInteraction);
     document.removeEventListener('click', earlyInteraction);
@@ -71,6 +68,23 @@ export function renderSilence(
     doReset();
   };
 
+  // Announce "Gone." after music fades and a beat of silence. Early-interaction
+  // listeners are registered AFTER the announcement so the user cannot race
+  // the announce timer and clear the phase before "Gone." fires.
+  const announceTimeout = setTimeout(() => {
+    if (hasReset) return;
+    liveRegion.textContent = 'Gone.';
+
+    // Allow skipping only after the announcement has fired and a brief
+    // settling window has passed (500ms), ensuring the word lands before
+    // any interaction can clear the phase.
+    setTimeout(() => {
+      if (hasReset) return;
+      document.addEventListener('keydown', earlyInteraction, { once: true });
+      document.addEventListener('click', earlyInteraction, { once: true });
+    }, 500);
+  }, TIMING.SILENCE_ANNOUNCE_DELAY);
+
   // After hold duration, fade "Gone." and return to invitation
   const fadeTimeout = setTimeout(() => {
     if (hasReset) return;
@@ -81,12 +95,4 @@ export function renderSilence(
 
     setTimeout(doReset, TIMING.SILENCE_FADE_OUT);
   }, TIMING.SILENCE_HOLD);
-
-  // Allow any keypress/click during the initial hold
-  // Only listen after a brief delay to prevent accidental triggers
-  setTimeout(() => {
-    if (hasReset) return;
-    document.addEventListener('keydown', earlyInteraction, { once: true });
-    document.addEventListener('click', earlyInteraction, { once: true });
-  }, 500);
 }

@@ -61,6 +61,7 @@ describe('renderBroadcast', () => {
     document.body
       .querySelectorAll('[aria-live], .progress')
       .forEach((el) => el.remove());
+    document.getElementById('broadcast-announce')?.remove();
   });
 
   it('renders the secret text as character spans', () => {
@@ -90,5 +91,21 @@ describe('renderBroadcast', () => {
     renderBroadcast(container, 'Test', vi.fn());
     const textContainer = container.querySelector('.broadcast__text');
     expect(textContainer!.getAttribute('aria-hidden')).toBe('true');
+  });
+
+  it('reuses a pre-existing #broadcast-announce element rather than creating a duplicate', () => {
+    const existing = document.createElement('div');
+    existing.id = 'broadcast-announce';
+    existing.setAttribute('aria-live', 'polite');
+    existing.setAttribute('aria-atomic', 'true');
+    existing.setAttribute('tabindex', '-1');
+    document.body.appendChild(existing);
+
+    renderBroadcast(container, 'Test', vi.fn());
+
+    const allLiveRegions = document.body.querySelectorAll(
+      '#broadcast-announce',
+    );
+    expect(allLiveRegions.length).toBe(1);
   });
 });

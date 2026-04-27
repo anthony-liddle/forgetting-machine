@@ -72,6 +72,19 @@ export function renderInvitation(
   button.addEventListener('click', () => {
     const secret = textarea.value.slice(0, MAX_SECRET_LENGTH);
     if (secret.trim().length > 0) {
+      // Pre-create the broadcast live region and move focus to it BEFORE the
+      // phase swap. When the invitation phase is removed, VoiceOver would
+      // otherwise re-read #app's role/label ("The Forgetting Machine, main").
+      // Focusing an element on body gives VoiceOver a stable anchor so the
+      // subsequent live-region announcement lands cleanly.
+      document.getElementById('broadcast-announce')?.remove();
+      const announceEl = createElement('div', 'sr-only');
+      announceEl.id = 'broadcast-announce';
+      announceEl.setAttribute('aria-live', 'polite');
+      announceEl.setAttribute('aria-atomic', 'true');
+      announceEl.setAttribute('tabindex', '-1');
+      document.body.appendChild(announceEl);
+      announceEl.focus();
       onLetGo(secret);
     }
   });

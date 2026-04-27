@@ -94,22 +94,28 @@ export function renderBroadcast(
   // individual characters; the live region below is the accessible text.
   textContainer.setAttribute('aria-hidden', 'true');
 
-  // Accessibility: polite live region for the full secret text.
-  // Appended to document.body (not inside the phase) so VoiceOver treats it
-  // as a global announcement rather than content to navigate into. Must be in
-  // the DOM empty first; VoiceOver announces the subsequent change, not
-  // pre-existing content. 500ms gives VoiceOver time to settle after the
-  // focus loss that occurs when the invitation phase is removed.
-  const liveRegion = createElement('div', 'sr-only');
-  liveRegion.setAttribute('aria-live', 'polite');
-  liveRegion.setAttribute('aria-atomic', 'true');
+  // Accessibility: reuse the #broadcast-announce live region that invitation.ts
+  // pre-created and focused before the phase swap. Reusing it (rather than
+  // creating a new region) avoids a duplicate live region and lets VoiceOver
+  // detect the content change reliably. Fall back to creating a new region if
+  // the element is absent (e.g. in tests that call renderBroadcast directly).
+  const liveRegion =
+    (document.getElementById('broadcast-announce') as HTMLElement | null) ??
+    (() => {
+      const el = createElement('div', 'sr-only');
+      el.id = 'broadcast-announce';
+      el.setAttribute('aria-live', 'polite');
+      el.setAttribute('aria-atomic', 'true');
+      el.setAttribute('tabindex', '-1');
+      document.body.appendChild(el);
+      return el;
+    })();
 
   // Progress bar
   const progressBar = createProgressBar();
 
   phase.appendChild(textContainer);
   container.appendChild(phase);
-  document.body.appendChild(liveRegion);
   document.body.appendChild(progressBar);
 
   setTimeout(() => {
