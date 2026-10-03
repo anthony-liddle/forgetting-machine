@@ -22,6 +22,7 @@ No database. No logs. No accounts. No server. Nothing you write here will be sav
 ## Getting Started
 
 ```bash
+nvm use
 pnpm install
 pnpm dev
 ```

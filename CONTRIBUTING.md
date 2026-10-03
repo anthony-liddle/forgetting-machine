@@ -9,6 +9,9 @@ Thank you for your interest in contributing.
 git clone https://github.com/anthonyliddle/forgetting-machine.git
 cd forgetting-machine
 
+# Use the Node version pinned in .nvmrc
+nvm use
+
 # Install dependencies
 pnpm install
 

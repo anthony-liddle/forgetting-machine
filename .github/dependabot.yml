@@ -7,7 +7,27 @@ updates:
     commit-message:
       prefix: 'chore(deps)'
     groups:
+      # Toolchain minors can surface new type or lint errors, so they get their
+      # own PR. A dependency joins the first group it matches, so keep this first.
+      toolchain:
+        patterns:
+          - 'vite'
+          - 'vitest'
+          - 'typescript'
+          - 'typescript-eslint'
+          - 'eslint'
+          - 'eslint-*'
+          - '@eslint/*'
+        update-types:
+          - 'minor'
+          - 'patch'
       minor-and-patch:
+        patterns:
+          - '*'
+        # soundscape-engine is pre-1.0 and ships audible changes in minors, so it
+        # gets its own PR to audition.
+        exclude-patterns:
+          - 'soundscape-engine'
         update-types:
           - 'minor'
           - 'patch'
