@@ -12,8 +12,8 @@ importers:
         specifier: ^2.0.1
         version: 2.0.1
       soundscape-engine:
-        specifier: ^0.3.0
-        version: 0.3.0
+        specifier: ^0.4.1
+        version: 0.4.1
     devDependencies:
       '@commitlint/cli':
         specifier: ^21.2.3
@@ -1256,8 +1256,8 @@ packages:
     resolution: {integrity: sha512-7++dFhtcx3353uBaq8DDR4NuxBetBzC7ZQOhmTQInHEd6bSrXdiEyzCvG07Z44UYdLShWUyXt5M/yhz8ekcb1A==}
     engines: {node: '>=8'}
 
-  soundscape-engine@0.3.0:
-    resolution: {integrity: sha512-yeG021qVHqsjA5zgGf6qSV0UJ0Kntxk58uE3PR53KZJM/C48j3qc02tJYXYPfgZtIIiIy+fadokr8fwdDVKN1A==}
+  soundscape-engine@0.4.1:
+    resolution: {integrity: sha512-ylI7EACHs7T46KXspZiP0X/FCN9F/wRDOMM+V42gaqK2RD1GmiO3Zp/BBwbMkt4EtA5AG7qOBjGVjRUNaAkfBw==}
 
   source-map-js@1.2.2:
     resolution: {integrity: sha512-KGj/8Y43x35aZVDtt+J4mK1hoLGHULMYfSkODJNQjNDC3oW1PqPoxMwo0pLUsWM/UEGzON/NxeHywEfNXNP3Vw==}
@@ -2554,7 +2554,7 @@ snapshots:
 
   shebang-regex@3.0.0: {}
 
-  soundscape-engine@0.3.0: {}
+  soundscape-engine@0.4.1: {}
 
   source-map-js@1.2.2: {}
 

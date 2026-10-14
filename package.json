@@ -43,6 +43,6 @@
   },
   "dependencies": {
     "@vercel/analytics": "^2.0.1",
-    "soundscape-engine": "^0.3.0"
+    "soundscape-engine": "^0.4.1"
   }
 }
